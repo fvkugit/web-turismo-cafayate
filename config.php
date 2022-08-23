@@ -1,6 +1,6 @@
 <?php 
     $username = 'root';
-    $password = '';
+    $password = '123';
     $server = 'localhost';
     $db = 'cafayate';
     $conexion = mysqli_connect($server,$username,$password,$db);
