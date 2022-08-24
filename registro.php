@@ -1,65 +1,80 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>Proyecto Cafayate Comercios</title>
 
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>Proyecto Cafayate Comercios</title>
 
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-    <link rel="stylesheet" href="css/fontAwesome.css" />
-    <link rel="stylesheet" href="css/hero-slider.css" />
-    <link rel="stylesheet" href="css/owl-carousel.css" />
-    <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link
-      href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900"
-      rel="stylesheet"
-    />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="css/fontAwesome.css" />
+  <link rel="stylesheet" href="css/hero-slider.css" />
+  <link rel="stylesheet" href="css/owl-carousel.css" />
+  <link rel="stylesheet" href="css/style.css">
 
-    <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-  </head>
+  <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
 
-  <body>
+  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+</head>
+
+<body>
   <?php
-include("config.php");
+  include("config.php");
+  include_once("validaciones.php");
 
-if( isset($_POST['submit'])) {
-	$email = $_POST['email'];
-	$pass = $_POST['password'];
-  $id_rol = 1;
-  $name = "test";
-  $tel = "123";
-  $apellido = "apellido";
-  $dni = "321";
 
-	if($email == "" || $pass == "") {
-		echo "All fields should be filled. Either one or many fields are empty.";
-		echo "<br/>";
-		echo "<a href='register.php'>Go back</a>";
-	} else {
-		mysqli_query($conexion, "INSERT INTO usuarios(nombre, apellido, telefono, correo, password, dni, id_rol) VALUES('$name', '$apellido', '$tel', '$email', md5('$pass'), '$dni', '$id_rol')")
-		or die($conexion->error);
-			
-		echo "Registration successfully";
-		echo "<br/>";
-		// echo "<a href='login.php'>Login</a>";
-	}
-} else {
-?>
+  if (isset($_POST['submit'])) {
+    $id_rol = 1;
+    $email = $_POST['email'];
+    $pass = $_POST['password'];
+    $name = $_POST['name'];
+    $tel = $_POST['tel'];
+    $lastname = $_POST['lastname'];
+    $dni = $_POST['dni'];
+    $errors = array();
+
+    if ($email == "" && $pass == "" && $name == "" && $tel == "" && $lastname == "" && $dni == "") {
+      unset($_POST['submit']);
+      $error = "Debes completar todos los campos del registro.";
+      include("registro.php");
+    } else {
+      $errorOnSubmit = false;
+      $errors["email"] = validarCampo($email, "email");
+      $errors["name"] = validarCampo($name, "name");
+      $errors["lastname"] = validarCampo($lastname, "lastname");
+      $errors["tel"] = validarCampo($tel, "tel");
+      $errors["dni"] = validarCampo($dni, "dni");
+      $errors["pass"] = validarCampo($pass, "pass");
+      foreach ($errors as $error => $val) {
+        if ($val != ""){ $errorOnSubmit = true; break; }
+      }
+      $error = "";
+
+      if (!$errorOnSubmit) {
+        mysqli_query($conexion, "INSERT INTO usuarios(nombre, apellido, telefono, correo, password, dni, id_rol) VALUES('$name', '$lastname', '$tel', '$email', md5('$pass'), '$dni', '$id_rol')")
+        or die($conexion->error);
+      }
+
+      unset($_POST['submit']);
+      include("registro.php");
+    }
+  } else {
+  ?>
     <div class="wrap">
       <header id="header">
         <div class="container">
           <div class="row">
             <div class="col-md-12">
               <button id="primary-nav-button" type="button">Menu</button>
-              <a href="inicio.html"
-                ><div class="logo">
-                  <img src="img/logo2.png" alt="Venue Logo" /></div
-              ></a>
+              <a href="inicio.html">
+                <div class="logo">
+                  <img src="img/logo2.png" alt="Venue Logo" />
+                </div>
+              </a>
               <nav id="primary-nav" class="dropdown cf">
                 <ul class="dropdown menu">
                   <li><a href="inicio.html">Inicio</a></li>
@@ -79,11 +94,7 @@ if( isset($_POST['submit'])) {
       </header>
     </div>
 
-    <section
-      class="banner banner-secondary"
-      id="top"
-      style="background-image: url(img/banner-image-1-1920x3001.jpg)"
-    >
+    <section class="banner banner-secondary" id="top" style="background-image: url(img/banner-image-1-1920x3001.jpg)">
       <div class="container">
         <div class="row">
           <div class="col-md-10 col-md-offset-1">
@@ -103,25 +114,28 @@ if( isset($_POST['submit'])) {
             <h3 class="heading-desc">
               Registrarse
             </h3>
+            <p class="heading-desc text-red"><?php if (isset($error)){ echo $error; }?></p>
             
             <div class="main">
-                <label for="email">Ingresa tu correo electronico</label>
-                <input
-                type="text"
-                class="form-control"
-                name="email"
-                placeholder="Email"
-                autofocus
-                />
-                <label for="password">Ingresa tu contraseña</label>
-                <input
-                type="password"
-                class="form-control"
-                name="password"
-                placeholder="Password"
-              />
+              <label for="name">Ingresa tu nombre</label>
+              <input type="text" class="form-control" name="name" placeholder="Nombre" autofocus />
+              <p class="text-red"><?php if (isset($errors['name'])){ echo $errors['name']; }  ?></p>
+              <label for="name">Ingresa tu apellido</label>
+              <input type="text" class="form-control" name="lastname" placeholder="Apellido" autofocus />
+              <p class="text-red"><?php if (isset($errors['lastname'])){ echo $errors['lastname']; }  ?></p>
+              <label for="name">Ingresa tu documento</label>
+              <input type="text" class="form-control" name="dni" placeholder="Documento" autofocus />
+              <p class="text-red"><?php if (isset($errors['dni'])){ echo $errors['dni']; }  ?></p>
+              <label for="name">Ingresa un telefono</label>
+              <input type="text" class="form-control" name="tel" placeholder="Telefono 3868-xxxxxxx" autofocus />
+              <p class="text-red"><?php if (isset($errors['tel'])){ echo $errors['tel']; }  ?></p>
+              <label for="email">Ingresa tu correo electronico</label>
+              <input type="text" class="form-control" name="email" placeholder="Email" autofocus />
+              <p class="text-red"><?php if (isset($errors['email'])){ echo $errors['email']; }  ?></p>
+              <label for="password">Ingresa tu contraseña</label>
+              <input type="password" class="form-control" name="password" placeholder="Password" />
+              <p class="text-red"><?php if (isset($errors['pass'])){ echo $errors['pass']; }  ?></p>
 
-              <p class="text-right" ><a href="#">Olvide mi contraseña</a></p>
               <span class="clearfix"></span>
             </div>
             <div class="login-footer">
@@ -133,11 +147,7 @@ if( isset($_POST['submit'])) {
                   </div> -->
                 </div>
                 <div class="col-xs-6 col-md-6 pull-right">
-                  <button
-                    type="submit"
-                    name="submit"
-                    class="orange btn btn-large pull-right"
-                  >
+                  <button type="submit" name="submit" class="orange btn btn-large pull-right">
                     Registrarse
                   </button>
                 </div>
@@ -154,10 +164,7 @@ if( isset($_POST['submit'])) {
       </p>
     </div>
 
-    <script
-      src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"
-      type="text/javascript"
-    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
     <script>
       window.jQuery ||
         document.write(
@@ -170,8 +177,9 @@ if( isset($_POST['submit'])) {
     <script src="js/datepicker.js"></script>
     <script src="js/plugins.js"></script>
     <script src="js/main.js"></script>
-    <?php
-}
-?>
-  </body>
+  <?php
+  }
+  ?>
+</body>
+
 </html>
