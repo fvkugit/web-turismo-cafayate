@@ -25,6 +25,7 @@
   <?php
   include("config.php");
   include_once("validaciones.php");
+  include_once("db.php");
 
   if (!isset($formdata)){
     $formdata = array(
@@ -71,8 +72,11 @@
       }
       $error = "";
       if (!$errorOnSubmit) {
-        mysqli_query($conexion, "INSERT INTO usuarios(nombre, apellido, telefono, correo, password, dni, id_rol) VALUES('$name', '$lastname', '$tel', '$email', md5('$pass'), '$dni', '$id_rol')")
-        or die($conexion->error);
+        $res = $db->nuevoUsuario($name, $lastname, $tel, $email, $pass, $dni);
+        if (!$res[0]) {
+          $error = $res[1];
+          include("registro.php");
+        }
         unset($_POST['register']);
         include("result.php");
         return;
