@@ -58,7 +58,7 @@ function validarPassword($val, $min, $max){
         elseif (strlen($val) > $max) {$error .= "La contraseña no puede tener mas de {$max} caracteres.</br>";}
     }
     if (!preg_match ($pattern, $val) ){  
-        $error .= "La contraseña no cumple los requisitos, debe incluir 1 número y 1 mayuscula.</br>";  
+        $error .= "La contraseña no cumple los requisitos, debe incluir 1 número.</br>";  
     }
     return $error; 
 }
