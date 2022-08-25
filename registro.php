@@ -152,7 +152,7 @@
               <input type="text" class="form-control" name="email" placeholder="Email" value="<?php echo $formdata['email']; ?>"/>
               <p class="text-red"><?php if (isset($errors['email'])){ echo $errors['email']; }  ?></p>
               <label for="password">Ingresa tu contraseña</label>
-              <input type="password" class="form-control" name="password" placeholder="Password" value="<?php echo $formdata['pass']; ?>"/>
+              <input type="password" class="form-control" name="password" placeholder="Password" value="<?php echo $formdata['password']; ?>"/>
               <p class="text-red"><?php if (isset($errors['pass'])){ echo $errors['pass']; }  ?></p>
 
               <span class="clearfix"></span>
