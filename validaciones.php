@@ -32,6 +32,22 @@ function validarString($string, $min, $max){
     return $error;
 }
 
+function validarStringNum($string, $min, $max){
+    $pattern = "/^[A-Za-z0-9'\.\-\s\,]*$/"; 
+    $error = "";
+    if ($string == ""){
+        $error .= "El campo no puede estar vacio.</br>";
+    }else{
+        
+        if (strlen($string) < $min) {$error .= "El campo no puede tener menos de {$min} caracteres.</br>";}
+        elseif (strlen($string) > $max) {$error .= "El campo no puede tener mas de {$max} caracteres.</br>";}
+    }
+    if (!preg_match ($pattern, $string) ){  
+        $error .= "El campo tiene caracteres invalidos.</br>";  
+    }
+    return $error;
+}
+
 function validarNumerico($val, $min, $max){
     $pattern = "/^[0-9]*$/";
     $error = "";
@@ -87,6 +103,22 @@ function validarCampo($value, $type){
     }
     if ($type == "pass"){
         $res = validarPassword($value, 6, 20);
+        return $res;
+    }
+    if ($type == "cuit"){
+        $res = validarNumerico($value, 9, 14);
+        return $res;
+    }
+    if ($type == "nombre-comercio"){
+        $res = validarStringNum($value, 3, 100);
+        return $res;
+    }
+    if ($type == "rubro"){
+        $res = validarString($value, 3, 30);
+        return $res;
+    }
+    if ($type == "domicilio"){
+        $res = validarStringNum($value, 3, 40);
         return $res;
     }
 }
