@@ -1,13 +1,9 @@
 <?php
-
-include "config.php"; #Include PHP DB
-$query = "SELECT * FROM datos_publicos LIMIT 1";
-$query_noticias = "SELECT * FROM novedades LIMIT 3";
-$rows = mysqli_query($conexion, $query);
-$rowsnoticias = mysqli_query($conexion, $query_noticias);
-$data = mysqli_fetch_assoc($rows);
-
-
+include_once("./utils/sessions.php");
+include_once("./db/main.php");
+$pdata = $db_base->query("SELECT * FROM datos_publicos LIMIT 1");
+$ndata = $db_base->query("SELECT * FROM novedades LIMIT 3");
+$info = mysqli_fetch_assoc($pdata[1]);
 ?>
 
 <!DOCTYPE html>
@@ -33,33 +29,7 @@ $data = mysqli_fetch_assoc($rows);
     </head>
 
 <body>
-    <div class="wrap">
-        <header id="header">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <button id="primary-nav-button" type="button">Menu</button>
-                        <a href="inicio.html"><div class="logo">
-                            <img src="img/logo2.png" alt="Venue Logo">
-                        </div></a>
-                        <nav id="primary-nav" class="dropdown cf">
-                            <ul class="dropdown menu">
-                                <li class='active'><a href="inicio.html">Inicio</a></li>
-
-                                <li><a href="comercios.html">Comercios</a></li>
-
-                                <li><a href="novedades.html">Novedades</a></li>
-
-                                <li><a href="turismo.html">Turismo</a></li>
-
-                                <li><a href="turismo.html">Cuenta</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </header>
-    </div>
+    <?php include_once 'navbar.php'; ?>
       
     <section class="banner" id="top" style="background-image: url(img/Quebrada-de-cafayate.jpg);">
         <div class="container">
@@ -82,7 +52,7 @@ $data = mysqli_fetch_assoc($rows);
                         <div>
                             <br>
                             <h4>Sobre la ciudad</h4>
-                            <p><?php echo $data["bienvenida"] ?></p>
+                            <p><?php echo $info["bienvenida"] ?></p>
                             <br>
                         </div>
                     </div>
@@ -102,19 +72,19 @@ $data = mysqli_fetch_assoc($rows);
                     </div> 
                 </div> 
                 <div class="row">
-                    <?php while($row = mysqli_fetch_assoc($rowsnoticias)){ ?>
+                    <?php while($noticia = mysqli_fetch_assoc($ndata[1])){ ?>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="featured-item">
                             <div class="thumb">
                                 <div class="thumb-img">
-                                    <img src=<?php echo $row["imagen"]?> alt="">
+                                    <img src=<?php echo $noticia["imagen"]?> alt="">
                                 </div>
                             </div>
 
                             <div class="down-content">
-                                <h4><?php echo $row["titulo"] ?></h4>
+                                <h4><?php echo $noticia["titulo"] ?></h4>
 
-                                <p><?php echo $row["contenido"] ?></p>
+                                <p><?php echo $noticia["contenido"] ?></p>
 
                                 <div class="text-button">
                                     <a href="novevades-detalles.html">Leer Mas</a>
