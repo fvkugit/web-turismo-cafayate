@@ -995,7 +995,7 @@ section.contact .section-heading {
   line-height: 40px;
   height: 40px;
   width: 100%;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 textarea.form-control {
@@ -1355,6 +1355,10 @@ main > section:nth-child(even) {
 	padding:38px 38px 0px 38px;
 	
 }
+.info-desc{
+	padding:0px 38px 0px 38px;
+	
+}
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
   margin-bottom: 10px;
@@ -1514,4 +1518,7 @@ main > section:nth-child(even) {
 
 .text-red{
   color: #ff5151;
+}
+.text-green{
+  color: #0c8d37;
 }
