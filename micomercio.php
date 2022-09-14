@@ -3,7 +3,8 @@ require_once("validar_login.php");
 include_once("./utils/sessions.php");
 include_once("./db/main.php");
 include_once("./validaciones.php");
-$usuario = $usuarios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
+$usuario = $usuarios->obtenerUno(["id_usuario" => "'{$_SESSION['id']}'"])[1];
+$comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,36 +33,69 @@ $usuario = $usuarios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
 <body>
     <?php
 
-    if (($_SERVER['REQUEST_METHOD'] === "POST") and (isset($_POST['solicitudcomercio']))) {
-        $cuit = $_POST['cuit'];
-        $nombre = $_POST['nombre'];
-        $rubro = $_POST['rubro'];
-        $domicilio = $_POST['domicilio'];
-        $tel = $_POST['tel'];
-        $id = $_SESSION['id'];
-        $errorOnSubmit = false;
-        $errors["cuit"] = validarCampo($cuit, "cuit");
-        $errors["nombre"] = validarCampo($nombre, "nombre-comercio");
-        $errors["rubro"] = validarCampo($rubro, "rubro");
-        $errors["domicilio"] = validarCampo($domicilio, "domicilio");
-        $errors["tel"] = validarCampo($tel, "tel");
-        foreach ($errors as $e => $val) {
-            if ($val != "") {
-                $errorOnSubmit = true;
-                break;
+    if (($_SERVER['REQUEST_METHOD'] === "POST") and (isset($_POST['solicitudcomercio']) or isset($_POST['guardarcomercio']))) {
+        if (isset($_POST['solicitudcomercio'])) {
+            $cuit = $_POST['cuit'];
+            $nombre = $_POST['nombre'];
+            $rubro = $_POST['rubro'];
+            $domicilio = $_POST['domicilio'];
+            $tel = $_POST['tel'];
+            $id = $_SESSION['id'];
+            $errorOnSubmit = false;
+            $errors["cuit"] = validarCampo($cuit, "cuit");
+            $errors["nombre"] = validarCampo($nombre, "nombre-comercio");
+            $errors["rubro"] = validarCampo($rubro, "rubro");
+            $errors["domicilio"] = validarCampo($domicilio, "domicilio");
+            $errors["tel"] = validarCampo($tel, "tel");
+            foreach ($errors as $e => $val) {
+                if ($val != "") {
+                    $errorOnSubmit = true;
+                    break;
+                }
+            }
+            unset($_POST['solicitudcomercio']);
+            if (!$errorOnSubmit) {
+                $res = $solicitudes->crear(["id_usuario" => "'$id'","id_categoria"=>"'1'", "nombre" => "'$nombre'", "rubro" => "'$rubro'", "domicilio" => "'$domicilio'", "telefono" => "'$tel'"]);
+                if ($res[0]) {
+                    $message = $res[1];
+                    require("result.php");
+                } else {
+                }
+            } else {
+                require("micomercio.php");
             }
         }
-        unset($_POST['solicitudcomercio']);
-        if (!$errorOnSubmit) { 
-            $res = $solicitudes->crear(["id_usuario"=>"'$id'", "nombre"=>"'$nombre'", "rubro"=>"'$rubro'", "domicilio"=>"'$domicilio'", "telefono"=>"'$tel'"]);
-            if ($res[0]){
-                $message = $res[1];
-                require("result.php");
-            }else{
-                
-            }         
-        } else {
-            require("micomercio.php");
+        elseif(isset($_POST['guardarcomercio'])){
+            $nombre = $_POST['nombre'];
+            $domicilio = $_POST['domicilio'];
+            $barrio = $_POST['barrio'];
+            $descripcion = $_POST['descripcion'];
+            $horarios = $_POST['horarios'];
+            $id = $_SESSION['id'];
+            $errorOnSubmit = false;
+            $errors["nombre"] = validarCampo($nombre, "nombre-comercio");
+            $errors["barrio"] = validarCampo($barrio, "nombre-comercio");
+            $errors["domicilio"] = validarCampo($domicilio, "domicilio");
+            $errors["descripcion"] = validarCampo($descripcion, "textarea");
+            $errors["horarios"] = validarCampo($horarios, "textarea");
+            foreach ($errors as $e => $val) {
+                if ($val != "") {
+                    $errorOnSubmit = true;
+                    break;
+                }
+            }
+            unset($_POST['guardarcomercio']);
+            if (!$errorOnSubmit) {
+                $res = $comercios->crear(["id_usuario"=>"'$id'","nombre"=>"'$nombre'","domicilio"=>"'$domicilio'","barrio"=>"'$barrio'","descripcion"=>"'$descripcion'","horarios"=>"'$horarios'"]);
+                if ($res[0]) {
+                    $message = "Los datos de su comercio han sido actualizados.";
+                    $redirect = "./micomercio.php";
+                    require("result.php");
+                } else {
+                }
+            } else {
+                require("micomercio.php");
+            }
         }
     } else { ?>
         <?php include_once 'navbar.php'; ?>
@@ -98,8 +132,8 @@ $usuario = $usuarios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
                                     </div>
                                 </div>
 
-                                <?php 
-                                    include_once("./perfil_lateral.php");
+                                <?php
+                                include_once("./perfil_lateral.php");
                                 ?>
 
                             </div>
@@ -176,7 +210,62 @@ $usuario = $usuarios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
                                             </form>
                                         <?php } ?>
                                     <?php } else { ?>
-                                        <p> Ver datos de su comercio </p>
+                                        <form method="POST" name="guardarcomercio">
+                                            <div class="mg-btm mx-auto">
+                                                <h3 class="heading-desc">
+                                                    Editar datos de su comercio
+                                                </h3>
+
+                                                <?php if (isset($error)) { ?>
+                                                    <h3 class="heading-desc text-red">
+                                                        <?php echo ($error) ?>
+                                                    </h3>
+                                                <?php } ?>
+
+                                                <div class="main">
+                                                    <label for="nombre">Nombre</label>
+                                                    <input type="text" class="form-control" name="nombre" value="<?php if(isset($comercio["id_comercio"])){echo($comercio['nombre']);}; ?>" autofocus />
+                                                    <p class="text-red"><?php if (isset($errors['nombre'])) {
+                                                                            echo $errors['nombre'];
+                                                                        }  ?></p>
+                                                    <label for="barrio">Barrio</label>
+                                                    <input type="text" class="form-control" name="barrio" value="<?php if(isset($comercio["id_comercio"])){echo($comercio['barrio']);}; ?>"/>
+                                                    <p class="text-red"><?php if (isset($errors['barrio'])) {
+                                                                            echo $errors['barrio'];
+                                                                        }  ?></p>
+                                                    <label for="domicilio">Domicilio del comercio</label>
+                                                    <input type="text" class="form-control" name="domicilio" value="<?php if(isset($comercio["id_comercio"])){echo($comercio['domicilio']);}; ?>"/>
+                                                    <p class="text-red"><?php if (isset($errors['domicilio'])) {
+                                                                            echo $errors['domicilio'];
+                                                                        }  ?></p>
+
+                                                    <label for="descripcion">Descripción</label>
+                                                    <textarea class="ckeditor" name="descripcion"><?php if(isset($comercio["id_comercio"])){echo($comercio['descripcion']);}; ?></textarea>
+                                                    <p class="text-red"><?php if (isset($errors['descripcion'])) {
+                                                                            echo $errors['descripcion'];
+                                                                        }  ?></p>
+
+                                                    <label for="horarios">Horarios</label>
+                                                    <textarea class="ckeditor" name="horarios"><?php if(isset($comercio["id_comercio"])){echo($comercio['horarios']);}; ?></textarea>
+                                                    <p class="text-red"><?php if (isset($errors['horarios'])) {
+                                                                            echo $errors['horarios'];
+                                                                        }  ?></p>
+
+
+                                                    <span class="clearfix"></span>
+                                                </div>
+                                                <div class="login-footer">
+                                                    <div class="row">
+
+                                                        <div class="col-xs-6 col-md-6 pull-right">
+                                                            <button type="submit" name="guardarcomercio" class="orange btn btn-large pull-right">
+                                                                Guardar
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
                                     <?php } ?>
                                         </div>
                             </div>
@@ -258,7 +347,7 @@ $usuario = $usuarios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
         <script src="js/datepicker.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
-
+        <script src="utils/ckeditor/ckeditor.js"></script>
     <?php } ?>
 </body>
 
