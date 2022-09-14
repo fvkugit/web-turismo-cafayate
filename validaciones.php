@@ -32,6 +32,17 @@ function validarString($string, $min, $max){
     return $error;
 }
 
+function validarLong($data, $min, $max){
+    $error = "";
+    if ($data == ""){
+        $error .= "El campo no puede estar vacio.</br>";
+    }else{
+        if (strlen($data) < $min) {$error .= "El campo no puede tener menos de {$min} caracteres.</br>";}
+        elseif (strlen($data) > $max) {$error .= "El campo no puede tener mas de {$max} caracteres.</br>";}
+    }
+    return $error;
+}
+
 function validarStringNum($string, $min, $max){
     $pattern = "/^[A-Za-z0-9'\.\-\s\,]*$/"; 
     $error = "";
@@ -119,6 +130,10 @@ function validarCampo($value, $type){
     }
     if ($type == "domicilio"){
         $res = validarStringNum($value, 3, 40);
+        return $res;
+    }
+    if ($type == "textarea"){
+        $res = validarLong($value, 10, 5000);
         return $res;
     }
 }
