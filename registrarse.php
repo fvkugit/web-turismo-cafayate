@@ -26,6 +26,7 @@
   include_once("validaciones.php");
   include_once("./utils/sessions.php");
   include_once("./db/main.php");
+  require_once("./utils/correo.php");
 
   if (!isset($formdata)){
     $formdata = array(
@@ -79,6 +80,9 @@
           include("registrarse.php");
         }
         unset($_POST['register']);
+
+        $correos->registro($email, $name);
+
         $message = "Su registro se ha completado con exito.";
         include("result.php");
         return;
