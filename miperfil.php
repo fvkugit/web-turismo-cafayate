@@ -98,41 +98,9 @@ $usuario = $usuarios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
                                     </div>
                                 </div>
 
-                                <div class="profile-usermenu">
-                                    <ul class="nav">
-                                        <li class="active">
-                                            <a href="./miperfil.php">
-                                                <i class="glyphicon glyphicon-home"></i>
-                                                Mis datos </a>
-                                        </li>
-                                        <li>
-                                            <a href="./micomercio.php">
-                                                <i class="glyphicon glyphicon-shopping-cart"></i>
-                                                Mi comercio </a>
-                                        </li>
-                                        <?php if($usuario["rol"] === "Admin"){ ?>
-                                            <li class="category">
-                                                <i class="	glyphicon glyphicon-wrench"></i>
-                                                Admin 
-                                            </li>
-                                            <li>
-                                                <a href="./micomercio.php">
-                                                    <i class="glyphicon glyphicon-user"></i>
-                                                    Usuarios </a>
-                                            </li>
-                                            <li>
-                                                <a href="./micomercio.php">
-                                                    <i class="glyphicon glyphicon-book"></i>
-                                                    Solicitudes </a>
-                                            </li>
-                                            <li>
-                                                <a href="./micomercio.php">
-                                                    <i class="glyphicon glyphicon-certificate"></i>
-                                                    Comercios </a>
-                                            </li>
-                                        <?php } ?>
-                                    </ul>
-                                </div>
+                                <?php 
+                                    include_once("./perfil_lateral.php");
+                                ?>
 
                             </div>
                         </div>
