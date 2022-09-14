@@ -76,8 +76,12 @@ class DBModelo{
         if ($res[0] === false) { return $res; }
         return array($res[0], "Consulta realizada con exito.");
     }
-    public function eliminar(){
-        //
+    public function eliminar($where){
+        $where = $this->formatWhere($where);
+        $query = ("DELETE FROM " . $this->table . " WHERE " . $where);
+        $res = $this->db->query($query);
+        if ($res[0] === false) { return $res; }
+        return array($res[0], "Consulta realizada con exito.");
     }
     public function actualizar($newdata, $where){
         $query = ("UPDATE {$this->table} SET " . ($this->formatUpdate($newdata)) . " WHERE " . ($this->formatWhere($where)));
@@ -87,6 +91,11 @@ class DBModelo{
     public function obtener($valorBusqueda){
         $where = $this->formatWhere($valorBusqueda);
         $query = ("SELECT * FROM " . $this->table . " WHERE " . $where);
+        $res = $this->db->query($query);
+        return ($res[1]);
+    }
+    public function obtenerTodo(){
+        $query = ("SELECT * FROM " . $this->table);
         $res = $this->db->query($query);
         return ($res[1]);
     }
@@ -144,16 +153,30 @@ class Usuarios extends DBModelo{
 }
 
 class Novedades extends DBModelo{
-    public function crear($data){
-        // Validaciones
-        return parent::crear($data);
+    public function obtenerTodo(){
+        $query = ("SELECT sc.*, nc.descripcion as cat FROM " . $this->table . " sc LEFT JOIN novedades_categorias nc USING(id_categoria)");
+        $res = $this->db->query($query);
+        return ($res[1]);
     }
 }
 
 class Solicitudes extends DBModelo{
-    public function crear($data){
-        // Validaciones
-        return parent::crear($data);
+    public function obtenerTodo(){
+        $query = ("SELECT sc.*, CONCAT(u.nombre, ' ', u.apellido) as propietario FROM " . $this->table . " sc LEFT JOIN usuarios u USING(id_usuario)");
+        $res = $this->db->query($query);
+        return ($res[1]);
+    }
+}
+
+class DPublica extends DBModelo{
+    public function obtenerUno($valorBusqueda){
+        $query = ("SELECT * FROM " . $this->table);
+        $res = $this->db->query($query);
+        $row = mysqli_fetch_assoc($res[1]);
+        if (is_array($row) && !empty($row)){
+            return array(true, $row);
+        }
+        return array(false, "Error en consulta.");
     }
 }
 
