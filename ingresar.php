@@ -37,6 +37,7 @@ include_once("./db/main.php");
             $_SESSION['logged'] = true;
             $_SESSION['email'] = $userdata['correo'];
             $_SESSION['id'] = $userdata['id_usuario'];
+            $_SESSION['rol'] = $userdata['rol'];
             $message = "Iniciaste sesión correctamente.";
             require("result.php");
         } else {
