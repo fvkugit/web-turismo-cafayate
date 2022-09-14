@@ -26,7 +26,7 @@
   include_once("validaciones.php");
   include_once("./utils/sessions.php");
   include_once("./db/main.php");
-  require_once("./utils/correo.php");
+  include_once("./utils/correo.php");
 
   if (!isset($formdata)){
     $formdata = array(
