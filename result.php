@@ -2,6 +2,7 @@
 
 include "config.php"; #Include PHP DB
 // $message = "Su registro fue completado con exito"
+$enlaceBoton = @$redirect ?: "./index.php" 
 
 ?>
 
@@ -38,10 +39,11 @@ include "config.php"; #Include PHP DB
                     <div class="banner-caption">
                         <div class="line-dec"></div>
                         <h2><?php echo ($message) ?></h2>
-                        <a href="./index.php">
+                        <a href="<?php echo($enlaceBoton) ?>">
                             <button class="orange btn btn-large pull-right">
                                 Continuar
                             </button>
+
                         </a>
                     </div>
                 </div>
