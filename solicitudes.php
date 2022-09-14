@@ -2,6 +2,7 @@
 require_once("validar_login.php");
 include_once("./utils/sessions.php");
 include_once("./db/main.php");
+include_once("./utils/correo.php");
 $usuario = $usuarios->obtenerUno(["id_usuario" => "'{$_SESSION['id']}'"])[1];
 $listaSolis = $solicitudes->obtenerTodo();
 ?>
@@ -33,19 +34,30 @@ $listaSolis = $solicitudes->obtenerTodo();
     <?php
     include_once("validaciones.php");
 
-    if (($_SERVER['REQUEST_METHOD'] === "POST")) {
+    if (($_SERVER['REQUEST_METHOD'] === "POST") && (isset($_POST['rechazar-soli']) or isset($_POST['aprobar-soli']))) {
         if (isset($_POST['aprobar-soli'])) {
-            $data = explode("-",$_POST['aprobar-soli']);
+            $data = explode("-", $_POST['aprobar-soli']);
             $uId = $data[1];
             $sId = $data[0];
+            $uData = $usuarios->obtenerUno(["id_usuario"=>"'$uId'"])[1];
+            $correo = $uData["correo"];
+            $nombre = $uData["nombre"];
+            $usuarios->actualizar(["id_rol" => "'3'"], ["id_usuario" => "'$uId'"]);
             $solicitudes->eliminar(["id_solicitud" => "'$sId'"]);
-            $usuarios->actualizar(["id_rol"=>"'3'"],["id_usuario"=>"'$uId'"]);
+            $correos->aprobarSolicitud($correo, $nombre);
             $message = "La solicitud ha sido aprobada correctamente.";
             $redirect = "./solicitudes.php";
             require("result.php");
         } elseif (isset($_POST['rechazar-soli'])) {
-            $sId = $_POST['rechazar-soli'];
+            $data = explode("-", $_POST['rechazar-soli']);
+            $uId = $data[1];
+            $sId = $data[0];
+            $uData = $usuarios->obtenerUno(["id_usuario"=>"'$uId'"])[1];
+            $correo = $uData["correo"];
+            $nombre = $uData["nombre"];
+            $razon = $_POST["razon"];
             $solicitudes->eliminar(["id_solicitud" => "'$sId'"]);
+            $correos->rechazarSolicitud($correo, $nombre, $razon);
             $redirect = "./solicitudes.php";
             $message = "La solicitud ha sido rechazada correctamente.";
             require("result.php");
@@ -87,12 +99,13 @@ $listaSolis = $solicitudes->obtenerTodo();
                                     </div>
                                 </div>
 
-                                <?php 
-                                    include_once("./perfil_lateral.php");
+                                <?php
+                                include_once("./perfil_lateral.php");
                                 ?>
 
                             </div>
                         </div>
+
                         <div class="col-md-9">
                             <div class="profile-content">
                                 <div class="row custyle">
@@ -118,18 +131,41 @@ $listaSolis = $solicitudes->obtenerTodo();
                                                 <td class="text-center">
                                                     <form method="post" name="aprobar-soli">
                                                         <button class='btn btn-success btn-s' type="submit" name="aprobar-soli" value="<?php echo ($soli["id_solicitud"] . "-" . $soli["id_usuario"]); ?>">✔</button>
-                                                        <button class='btn btn-danger btn-s' type="submit" name="rechazar-soli" value="<?php echo ($soli["id_solicitud"] . "-" . $soli["id_usuario"]); ?>">✘</button>
+                                                        <button class='btn btn-danger btn-s' type="button" data-toggle="modal" href="#mi_modal-<?php echo($soli["id_solicitud"]); ?>">✘</button>
                                                     </form>
                                                 </td>
                                             </tr>
+                                            <div class="modal fade" id="mi_modal-<?php echo($soli["id_solicitud"]); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+                                                            </button>
+                                                            <h4 class="modal-title" id="myModalLabel">Razón de rechazo [ID <?php echo($soli["id_solicitud"]); ?>]</h4>
+                                                        </div>
+                                                        <form method="post" name="rechazar-soli">
+                                                        <div class="modal-body">
+                                                            <div class="row" style="padding:15px">
+                                                                <textarea name="razon" style="width: 100%;"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                                <button class='btn btn-danger btn-s' type="submit" name="rechazar-soli" value="<?php echo ($soli["id_solicitud"] . "-" . $soli["id_usuario"]); ?>">Rechazar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <?php } ?>
 
                                     </table>
-                                    <?php if(mysqli_num_rows($listaSolis) === 0){?> 
-                                            <h3 class="text-center">
-                                                <?php echo("No hay ninguna solicitud.");  ?> 
-                                            </h3>
-                                        <?php } ?>
+
+                                    <?php if (mysqli_num_rows($listaSolis) === 0) { ?>
+                                        <h3 class="text-center">
+                                            <?php echo ("No hay ninguna solicitud.");  ?>
+                                        </h3>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>
