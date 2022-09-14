@@ -116,7 +116,7 @@ section {
   /* content: 'â˜°'; */
   content: '\2261';
   display: inline-block;
-  background-color: #4883ff;
+  background-color: #f1a74e;
   font-size: 36px;
   font-style: normal;
   font-weight: normal;
@@ -175,11 +175,18 @@ section {
 #primary-nav .active > a,
 #primary-nav li > a:hover,
 #primary-nav li.selected > a {
-  color: #4883ff;
+  color: #f1a74e;
+}
+
+#primary-nav .active span{
+  color: #fff;
+  background-color: #f1a74e;
+  padding: 5px 5px;
+  border-radius: 20px;
 }
 
 .sub-menu {
-  border-top: 3px solid #4883ff;
+  border-top: 3px solid #f1a74e;
 }
 
 .sub-menu li a {
@@ -1521,4 +1528,9 @@ main > section:nth-child(even) {
 }
 .text-green{
   color: #0c8d37;
+}
+
+/* Solicitudes Perfil */
+.custab td{
+  vertical-align:text-top !important; 
 }
