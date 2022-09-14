@@ -180,5 +180,20 @@ class DPublica extends DBModelo{
     }
 }
 
+class Comercios extends DBModelo{
+    public function crear($data){
+        $com = $this->obtenerUno(["id_usuario"=>$data["id_usuario"]]);
+        if($com[0] && $com[1]["id_comercio"]){
+            $data["id_comercio"] = $com[1]["id_comercio"];
+        }
+        $update =  $this->formatUpdate($data);
+        $insert = $this->formatInsert($data);
+        $query = ($insert . " ON DUPLICATE KEY UPDATE " . $update);
+        $res = $this->db->query($query);
+        if ($res[0] === false) { return $res; }
+        return array($res[0], "Consulta realizada con exito.");
+    }
+}
+
 
 ?>
