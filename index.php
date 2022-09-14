@@ -50,13 +50,9 @@ $info = mysqli_fetch_assoc($pdata[1]);
                 <div class="row">
                     <div class="col-md-12">
                         <div>
-                            <br>
-                            <h4>Sobre la ciudad</h4>
                             <p><?php echo $info["bienvenida"] ?></p>
-                            <br>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
