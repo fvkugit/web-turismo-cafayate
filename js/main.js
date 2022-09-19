@@ -2,6 +2,10 @@ jQuery(document).ready(function($) {
 
 	'use strict';
 
+        $('.uploader input').change(function () {
+          $('.uploader p').text(this.files[0].name + " ha sido seleccionada.");
+        });
+
         $(function() {
   
           // Vars
