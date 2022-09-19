@@ -15,9 +15,7 @@ class Correo{
         $email->addSubstitution("nombre", $nombre);
         try {
             $response = $this->sg->send($email);
-            print $response->statusCode() . "\n";
-            print_r($response->headers());
-            print $response->body() . "\n";
+
         } catch (Exception $e) {
             echo 'Caught exception: '. $e->getMessage() ."\n";
         }
@@ -48,6 +46,6 @@ class Correo{
         }
     }
 }
-$correos = new Correo("", "facugastonbarral@gmail.com");
+$correos = new Correo("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", "facugastonbarral@gmail.com");
 
 ?>
