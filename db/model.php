@@ -150,6 +150,11 @@ class Usuarios extends DBModelo{
         }
         return array(false, "Error en consulta.");
     }
+    public function obtenerTodo(){
+        $query = ("SELECT u.*, r.nombre as 'rol' FROM " . $this->table . " u JOIN roles r USING(id_rol)");
+        $res = $this->db->query($query);
+        return ($res[1]);
+    }
 }
 
 class Novedades extends DBModelo{
@@ -193,6 +198,15 @@ class Comercios extends DBModelo{
         if ($res[0] === false) { return $res; }
         return array($res[0], "Consulta realizada con exito.");
     }
+    public function obtenerTodo(){
+        $query = ("SELECT sc.*, CONCAT(u.nombre, ' ', u.apellido) as propietario FROM " . $this->table . " sc LEFT JOIN usuarios u USING(id_usuario)");
+        $res = $this->db->query($query);
+        return ($res[1]);
+    }
+}
+
+class Comercios_Imagenes extends DBModelo{
+    
 }
 
 
