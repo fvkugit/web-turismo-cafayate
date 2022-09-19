@@ -39,7 +39,7 @@ $listaSolis = $solicitudes->obtenerTodo();
             $data = explode("-", $_POST['aprobar-soli']);
             $uId = $data[1];
             $sId = $data[0];
-            $uData = $usuarios->obtenerUno(["id_usuario"=>"'$uId'"])[1];
+            $uData = $usuarios->obtenerUno(["id_usuario" => "'$uId'"])[1];
             $correo = $uData["correo"];
             $nombre = $uData["nombre"];
             $usuarios->actualizar(["id_rol" => "'3'"], ["id_usuario" => "'$uId'"]);
@@ -52,7 +52,7 @@ $listaSolis = $solicitudes->obtenerTodo();
             $data = explode("-", $_POST['rechazar-soli']);
             $uId = $data[1];
             $sId = $data[0];
-            $uData = $usuarios->obtenerUno(["id_usuario"=>"'$uId'"])[1];
+            $uData = $usuarios->obtenerUno(["id_usuario" => "'$uId'"])[1];
             $correo = $uData["correo"];
             $nombre = $uData["nombre"];
             $razon = $_POST["razon"];
@@ -131,26 +131,26 @@ $listaSolis = $solicitudes->obtenerTodo();
                                                 <td class="text-center">
                                                     <form method="post" name="aprobar-soli">
                                                         <button class='btn btn-success btn-s' type="submit" name="aprobar-soli" value="<?php echo ($soli["id_solicitud"] . "-" . $soli["id_usuario"]); ?>">✔</button>
-                                                        <button class='btn btn-danger btn-s' type="button" data-toggle="modal" href="#mi_modal-<?php echo($soli["id_solicitud"]); ?>">✘</button>
+                                                        <button class='btn btn-danger btn-s' type="button" data-toggle="modal" href="#mi_modal-<?php echo ($soli["id_solicitud"]); ?>">✘</button>
                                                     </form>
                                                 </td>
                                             </tr>
-                                            <div class="modal fade" id="mi_modal-<?php echo($soli["id_solicitud"]); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+                                            <div class="modal fade" id="mi_modal-<?php echo ($soli["id_solicitud"]); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal">
                                                                 <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
                                                             </button>
-                                                            <h4 class="modal-title" id="myModalLabel">Razón de rechazo [ID <?php echo($soli["id_solicitud"]); ?>]</h4>
+                                                            <h4 class="modal-title" id="myModalLabel">Razón de rechazo [ID <?php echo ($soli["id_solicitud"]); ?>]</h4>
                                                         </div>
                                                         <form method="post" name="rechazar-soli">
-                                                        <div class="modal-body">
-                                                            <div class="row" style="padding:15px">
-                                                                <textarea name="razon" style="width: 100%;"></textarea>
+                                                            <div class="modal-body">
+                                                                <div class="row" style="padding:15px">
+                                                                    <textarea name="razon" style="width: 100%;"></textarea>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
+                                                            <div class="modal-footer">
                                                                 <button class='btn btn-danger btn-s' type="submit" name="rechazar-soli" value="<?php echo ($soli["id_solicitud"] . "-" . $soli["id_usuario"]); ?>">Rechazar</button>
                                                             </div>
                                                         </form>
@@ -174,49 +174,7 @@ $listaSolis = $solicitudes->obtenerTodo();
             </div>
         </main>
 
-<section class="banner" id="center" style="background-image: url(img/fondo-naranja.png);">
-<footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="about-veno">
-                        <div class="logo">
-                            <img src="img/logo2.png" alt="Venue Logo">
-                        </div>
-                        <p>Proyecto Cafayate</p>
-                        
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="contact-info">
-                        <div class="footer-heading">
-                            <h4>Contacto</h4>
-                        </div>
-                        <p><i class="fa fa-map-marker"></i><a href="https://goo.gl/maps/nCDX4NmT6X7ogtHx8"><span>  Cafayate - Argentina</span></a></p>
-                        <p><i class="fa fa-phone"></i><span>  Telefono:</span><a href="https://wa.me/543410000000?text=Hola">+54.000-000-0000</a></p>
-                        <p><i class="fa fa-envelope"></i><span>  Correo:</span><a href="mailto:info@cafayate.com">info@cafayate.com</a></p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="contact-info">
-                        <div class="footer-heading">
-                            <h4>Nuestras Redes</h4>
-                        </div>
-                        <p><i class="fa fa-instagram"></i><a href="https://instagram.com"><span> Instagram</span></a></p>
-                        <p><i class="fa fa-youtube"></i><a href="https:youtube.com"> Youtube </a></p>
-                        <p><i class="fa fa-facebook"></i><a href="https:facebook.com"> Facebook</a></p>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </footer>
-
-        <div class="sub-footer">
-            <p>
-                Copyright © 2022 Practica Profesionalizante II Di Benedetto - Barral
-            </p>
-        </div>
+        <?php include_once("./footer.php"); ?>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
         <script>

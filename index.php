@@ -96,9 +96,7 @@ $info = mysqli_fetch_assoc($pdata[1]);
 
 
 
-        <div class="sub-footer">
-            <p>Copyright © 2022 Practica Profesionalizante II Di Benedetto - Barral</p>
-        </div>
+    <?php include_once("./footer.php"); ?>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
