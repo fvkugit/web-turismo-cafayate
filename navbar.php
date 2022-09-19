@@ -1,3 +1,14 @@
+<?php 
+
+include_once("./utils/sessions.php");
+include_once("./db/main.php");
+if(isset($_SESSION['id'])){
+    $usuario = $usuarios->obtenerUno(["id_usuario" => "'{$_SESSION['id']}'"])[1];
+}
+
+$activePage = basename($_SERVER['PHP_SELF'], ".php");
+
+?>
 <div class="wrap">
     <header id="header">
         <div class="container">
@@ -11,23 +22,23 @@
                     </a>
                     <nav id="primary-nav" class="dropdown cf">
                         <ul class="dropdown menu">
-                            <li class='active'><a href="index.php">Inicio</a></li>
+                            <li class="<?= ($activePage == 'index') ? 'active':''; ?>"><a href="index.php"><span>Inicio</span></a></li>
     
-                            <li><a href="comercios.html">Comercios</a></li>
+                            <li class="<?= ($activePage == 'comercios') ? 'active':''; ?>"><a href="comercios.php"><span>Comercios</span></a></li>
 
-                            <li><a href="novedades.html">Novedades</a></li>
+                            <li><a href="novedades.html"><span>Novedades</span></a></li>
 
-                            <li><a href="turismo.html">Turismo</a></li>
+                            <li class="<?= ($activePage == 'turismo') ? 'active':''; ?>"><a href="turismo.php"><span>Turismo</span></a></li>
 
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Cuenta
                                 <ul class="dropdown-menu">
                                     <?php if(isset($_SESSION['logged'])) {	?>
-                                        <li><a href="./miperfil.php">Mi perfil</a></li>
-                                        <li><a href="./salir.php">Salir</a></li>
+                                        <li class="<?= ($activePage == 'miperfil') ? 'active':''; ?>"><a href="./miperfil.php">Mi perfil</a></li>
+                                        <li class="<?= ($activePage == 'salir') ? 'active':''; ?>"><a href="./salir.php">Salir</a></li>
                                         <?php }else{	?>
-                                        <li><a href="./ingresar.php">Ingresar</a></li>
-                                        <li><a href="./registrarse.php">Registrarse</a></li>
+                                        <li class="<?= ($activePage == 'ingresar') ? 'active':''; ?>"><a href="./ingresar.php">Ingresar</a></li>
+                                        <li class="<?= ($activePage == 'registrarse') ? 'active':''; ?>"><a href="./registrarse.php">Registrarse</a></li>
                                     <?php }	?>
                                 </ul>
                             </li>
