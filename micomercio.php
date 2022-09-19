@@ -4,7 +4,10 @@ include_once("./utils/sessions.php");
 include_once("./db/main.php");
 include_once("./validaciones.php");
 $usuario = $usuarios->obtenerUno(["id_usuario" => "'{$_SESSION['id']}'"])[1];
-$comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
+$comercio = $comercios->obtenerUno(["id_usuario" => "'{$_SESSION['id']}'"])[1];
+$id_com = $comercio["id_comercio"];
+$imagenes = $comercios_imagenes->obtener(["id_comercio"=>"'$id_com'"]);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,7 +36,7 @@ $comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
 <body>
     <?php
 
-    if (($_SERVER['REQUEST_METHOD'] === "POST") and (isset($_POST['solicitudcomercio']) or isset($_POST['guardarcomercio']))) {
+    if (($_SERVER['REQUEST_METHOD'] === "POST") and (isset($_POST['solicitudcomercio']) || isset($_POST['guardarcomercio']) || isset($_POST['cargarimagen']) || isset($_POST['eliminarimagen']))) {
         if (isset($_POST['solicitudcomercio'])) {
             $cuit = $_POST['cuit'];
             $nombre = $_POST['nombre'];
@@ -55,17 +58,16 @@ $comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
             }
             unset($_POST['solicitudcomercio']);
             if (!$errorOnSubmit) {
-                $res = $solicitudes->crear(["id_usuario" => "'$id'","id_categoria"=>"'1'", "nombre" => "'$nombre'", "rubro" => "'$rubro'", "domicilio" => "'$domicilio'", "telefono" => "'$tel'"]);
+                $res = $solicitudes->crear(["id_usuario" => "'$id'", "nombre" => "'$nombre'", "rubro" => "'$rubro'", "domicilio" => "'$domicilio'", "telefono" => "'$tel'"]);
                 if ($res[0]) {
-                    $message = $res[1];
+                    $message = "Solicitud realizada con exito.";
                     require("result.php");
                 } else {
                 }
             } else {
                 require("micomercio.php");
             }
-        }
-        elseif(isset($_POST['guardarcomercio'])){
+        } elseif (isset($_POST['guardarcomercio'])) {
             $nombre = $_POST['nombre'];
             $domicilio = $_POST['domicilio'];
             $barrio = $_POST['barrio'];
@@ -86,7 +88,7 @@ $comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
             }
             unset($_POST['guardarcomercio']);
             if (!$errorOnSubmit) {
-                $res = $comercios->crear(["id_usuario"=>"'$id'","nombre"=>"'$nombre'","domicilio"=>"'$domicilio'","barrio"=>"'$barrio'","descripcion"=>"'$descripcion'","horarios"=>"'$horarios'"]);
+                $res = $comercios->crear(["id_usuario" => "'$id'", "nombre" => "'$nombre'", "domicilio" => "'$domicilio'", "barrio" => "'$barrio'", "descripcion" => "'$descripcion'", "horarios" => "'$horarios'"]);
                 if ($res[0]) {
                     $message = "Los datos de su comercio han sido actualizados.";
                     $redirect = "./micomercio.php";
@@ -95,6 +97,35 @@ $comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
                 }
             } else {
                 require("micomercio.php");
+            }
+        } elseif (isset($_POST['cargarimagen']) and isset($_FILES['imagencargada'])) {
+            $id_com = $comercio['id_comercio'];
+            $filename = $_SESSION['id'] . "-" . $id_com . "-" . $_FILES["imagencargada"]["name"];
+            $tempname = $_FILES["imagencargada"]["tmp_name"];
+            $folder = "./image/" . $filename;
+            if (move_uploaded_file($tempname, $folder)) {
+                $comercios_imagenes->crear(["id_comercio"=>"'$id_com'", "nombre"=>"'$filename'", "url"=>"'$folder'"]);
+                $message = "La imagen se ha cargado con exito.";
+                $redirect = "./micomercio.php";
+                require("result.php");
+
+            } else {
+                $message = "Error al cargar la imagen.";
+                $redirect = "./micomercio.php";
+                require("result.php");
+            }
+        } elseif (isset($_POST['eliminarimagen'])){
+            $id_eliminada = $_POST['eliminarimagen'];
+            $res = $comercios_imagenes->eliminar(["id_imagen"=>"'$id_eliminada'"]);
+            if ($res[0]) {
+                $message = "La imagen se ha eliminado con exito.";
+                $redirect = "./micomercio.php";
+                require("result.php");
+
+            } else {
+                $message = "Error al eliminar la imagen.";
+                $redirect = "./micomercio.php";
+                require("result.php");
             }
         }
     } else { ?>
@@ -210,8 +241,8 @@ $comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
                                             </form>
                                         <?php } ?>
                                     <?php } else { ?>
-                                        <form method="POST" name="guardarcomercio">
-                                            <div class="mg-btm mx-auto">
+                                        <div class="mg-btm mx-auto">
+                                            <form method="POST" name="guardarcomercio">
                                                 <h3 class="heading-desc">
                                                     Editar datos de su comercio
                                                 </h3>
@@ -224,37 +255,47 @@ $comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
 
                                                 <div class="main">
                                                     <label for="nombre">Nombre</label>
-                                                    <input type="text" class="form-control" name="nombre" value="<?php if(isset($comercio["id_comercio"])){echo($comercio['nombre']);}; ?>" autofocus />
+                                                    <input type="text" class="form-control" name="nombre" value="<?php if (isset($comercio["id_comercio"])) {
+                                                                                                                        echo ($comercio['nombre']);
+                                                                                                                    }; ?>" autofocus />
                                                     <p class="text-red"><?php if (isset($errors['nombre'])) {
                                                                             echo $errors['nombre'];
                                                                         }  ?></p>
                                                     <label for="barrio">Barrio</label>
-                                                    <input type="text" class="form-control" name="barrio" value="<?php if(isset($comercio["id_comercio"])){echo($comercio['barrio']);}; ?>"/>
+                                                    <input type="text" class="form-control" name="barrio" value="<?php if (isset($comercio["id_comercio"])) {
+                                                                                                                        echo ($comercio['barrio']);
+                                                                                                                    }; ?>" />
                                                     <p class="text-red"><?php if (isset($errors['barrio'])) {
                                                                             echo $errors['barrio'];
                                                                         }  ?></p>
                                                     <label for="domicilio">Domicilio del comercio</label>
-                                                    <input type="text" class="form-control" name="domicilio" value="<?php if(isset($comercio["id_comercio"])){echo($comercio['domicilio']);}; ?>"/>
+                                                    <input type="text" class="form-control" name="domicilio" value="<?php if (isset($comercio["id_comercio"])) {
+                                                                                                                        echo ($comercio['domicilio']);
+                                                                                                                    }; ?>" />
                                                     <p class="text-red"><?php if (isset($errors['domicilio'])) {
                                                                             echo $errors['domicilio'];
                                                                         }  ?></p>
 
                                                     <label for="descripcion">Descripción</label>
-                                                    <textarea class="ckeditor" name="descripcion"><?php if(isset($comercio["id_comercio"])){echo($comercio['descripcion']);}; ?></textarea>
+                                                    <textarea class="ckeditor" name="descripcion"><?php if (isset($comercio["id_comercio"])) {
+                                                                                                        echo ($comercio['descripcion']);
+                                                                                                    }; ?></textarea>
                                                     <p class="text-red"><?php if (isset($errors['descripcion'])) {
                                                                             echo $errors['descripcion'];
                                                                         }  ?></p>
 
                                                     <label for="horarios">Horarios</label>
-                                                    <textarea class="ckeditor" name="horarios"><?php if(isset($comercio["id_comercio"])){echo($comercio['horarios']);}; ?></textarea>
+                                                    <textarea class="ckeditor" name="horarios"><?php if (isset($comercio["id_comercio"])) {
+                                                                                                    echo ($comercio['horarios']);
+                                                                                                }; ?></textarea>
                                                     <p class="text-red"><?php if (isset($errors['horarios'])) {
                                                                             echo $errors['horarios'];
                                                                         }  ?></p>
 
 
-                                                    <span class="clearfix"></span>
+
                                                 </div>
-                                                <div class="login-footer">
+                                                <div class="">
                                                     <div class="row">
 
                                                         <div class="col-xs-6 col-md-6 pull-right">
@@ -264,8 +305,36 @@ $comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                            </form>
+                                            <div class="mg-btm mx-auto mt-5">
+                                                <label for="cargarimagen">Cargar imagen</label>
+
+                                                <div class="uploader">
+                                                    <form method="POST" name="cargarimagen" enctype="multipart/form-data">
+                                                        <input type="file" class="form-control" name="imagencargada">
+                                                        <p>Arrastra tu imagen o presiona aquí.</p>
+                                                        <button type="submit" name="cargarimagen"><span class="glyphicon glyphicon-cloud-upload"></span> Cargar</button>
+                                                    </form>
+                                                </div>
+
+                                                <label for="">Imagenes del comercio</label>
+                                
+                                                <div class="row">
+                                                    <?php while ($img = mysqli_fetch_assoc($imagenes)) { ?>
+                                                    <div class="col-sm-4 col-xs-6">
+                                                        <div class="form-group">
+                                                        <img class="imagen-grilla" src=<?php echo($img["url"]); ?> alt="" class="img-responsive">
+                                                        <form method="POST" name="eliminarimagen">
+                                                            <button type="submit" name="eliminarimagen" value=<?php echo($img["id_imagen"]) ?> class="btn btn-danger btn-sm btn-block"><span class="glyphicon glyphicon-trash"></span> Eliminar </button>
+                                                        </form>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    <?php } ?>
+                                                </div>
                                             </div>
-                                        </form>
+                                        </div>
                                     <?php } ?>
                                         </div>
                             </div>
@@ -274,49 +343,8 @@ $comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
                 </div>
         </main>
 
- <section class="banner" id="center" style="background-image: url(img/fondo-naranja.png);">
-<footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="about-veno">
-                        <div class="logo">
-                            <img src="img/logo2.png" alt="Venue Logo">
-                        </div>
-                        <p>Proyecto Cafayate</p>
-                        
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="contact-info">
-                        <div class="footer-heading">
-                            <h4>Contacto</h4>
-                        </div>
-                        <p><i class="fa fa-map-marker"></i><a href="https://goo.gl/maps/nCDX4NmT6X7ogtHx8"><span>  Cafayate - Argentina</span></a></p>
-                        <p><i class="fa fa-phone"></i><span>  Telefono:</span><a href="https://wa.me/543410000000?text=Hola">+54.000-000-0000</a></p>
-                        <p><i class="fa fa-envelope"></i><span>  Correo:</span><a href="mailto:info@cafayate.com">info@cafayate.com</a></p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="contact-info">
-                        <div class="footer-heading">
-                            <h4>Nuestras Redes</h4>
-                        </div>
-                        <p><i class="fa fa-instagram"></i><a href="https://instagram.com"><span> Instagram</span></a></p>
-                        <p><i class="fa fa-youtube"></i><a href="https:youtube.com"> Youtube </a></p>
-                        <p><i class="fa fa-facebook"></i><a href="https:facebook.com"> Facebook</a></p>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </footer>
+        <?php include_once("./footer.php"); ?>
 
-        <div class="sub-footer">
-            <p>
-                Copyright © 2022 Practica Profesionalizante II Di Benedetto - Barral
-            </p>
-        </div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
         <script>
@@ -327,7 +355,6 @@ $comercio = $comercios->obtenerUno(["id_usuario"=>"'{$_SESSION['id']}'"])[1];
         </script>
 
         <script src="js/vendor/bootstrap.min.js"></script>
-
         <script src="js/datepicker.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
