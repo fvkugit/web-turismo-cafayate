@@ -26,7 +26,7 @@ $activePage = basename($_SERVER['PHP_SELF'], ".php");
     
                             <li class="<?= ($activePage == 'comercios') ? 'active':''; ?>"><a href="comercios.php"><span>Comercios</span></a></li>
 
-                            <li><a href="novedades.html"><span>Novedades</span></a></li>
+                            <li class="<?= ($activePage == 'novedades') ? 'active':''; ?>"><a href="novedades.php"><span>Novedades</span></a></li>
 
                             <li class="<?= ($activePage == 'turismo') ? 'active':''; ?>"><a href="turismo.php"><span>Turismo</span></a></li>
 
