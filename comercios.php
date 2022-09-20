@@ -2,7 +2,7 @@
 
 include_once("./utils/sessions.php");
 include_once("./db/main.php");
-$listComercios = $db_base->query("SELECT * FROM comercios");
+$listComercios = $comercios->obtenerTodo();
 
 ?>
 
@@ -50,12 +50,13 @@ $listComercios = $db_base->query("SELECT * FROM comercios");
         <section class="featured-places">
             <div class="container">
                 <div class="row">
-                    <?php while ($comercio = mysqli_fetch_assoc($listComercios[1])) { ?>
+                    <?php while ($comercio = mysqli_fetch_assoc($listComercios)) { ?>
+
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="featured-item">
                                 <div class="thumb">
                                     <div class="thumb-img">
-                                        <img src="img/product-1-720x4802.jpg" alt="">
+                                        <img class="imagen-grilla mb-4" src=<?php echo($comercio["url"]); ?> alt="">
                                     </div>
 
 
