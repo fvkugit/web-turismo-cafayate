@@ -2,23 +2,8 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <title>Proyecto Cafayate Comercios</title>
-
-  <meta name="description" content="" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <link rel="stylesheet" href="css/bootstrap.min.css" />
-  <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-  <link rel="stylesheet" href="css/fontAwesome.css" />
-  <link rel="stylesheet" href="css/hero-slider.css" />
-  <link rel="stylesheet" href="css/owl-carousel.css" />
-  <link rel="stylesheet" href="css/style.css">
-
-  <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
-
-  <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+  <title>Proyecto Cafayate - Registrarse</title>
+  <?php include_once 'header.php'; ?>
 </head>
 
 <body>
@@ -28,7 +13,7 @@
   include_once("./db/main.php");
   include_once("./utils/correo.php");
 
-  if (!isset($formdata)){
+  if (!isset($formdata)) {
     $formdata = array(
       'email' => '',
       'password' => '',
@@ -38,12 +23,12 @@
       'dni' => '',
     );
   }
-  
+
   if (($_SERVER['REQUEST_METHOD'] === "POST") and (isset($_POST['register']))) {
     $id_rol = 1;
-    foreach($_POST as $key => $value){
-      if(isset($formdata[$key])){
-          $formdata[$key] = htmlspecialchars($value);
+    foreach ($_POST as $key => $value) {
+      if (isset($formdata[$key])) {
+        $formdata[$key] = htmlspecialchars($value);
       }
     }
 
@@ -70,11 +55,14 @@
       $errors["dni"] = validarCampo($dni, "dni");
       $errors["pass"] = validarCampo($pass, "pass");
       foreach ($errors as $e => $val) {
-        if ($val != ""){ $errorOnSubmit = true; break; }
+        if ($val != "") {
+          $errorOnSubmit = true;
+          break;
+        }
       }
       if (!$errorOnSubmit) {
         $hashedpass = password_hash($pass, PASSWORD_BCRYPT);
-        $res = $usuarios->crear(["nombre"=>"'{$name}'", "password"=>"'{$hashedpass}'", "apellido"=> "'{$lastname}'", "telefono"=> "'{$tel}'", "correo"=> "'{$email}'", "dni"=>"{$dni}"]);
+        $res = $usuarios->crear(["nombre" => "'{$name}'", "password" => "'{$hashedpass}'", "apellido" => "'{$lastname}'", "telefono" => "'{$tel}'", "correo" => "'{$email}'", "dni" => "{$dni}"]);
         if (!$res[0]) {
           $error = $res[1];
           include("registrarse.php");
@@ -86,10 +74,9 @@
         $message = "Su registro se ha completado con exito.";
         include("result.php");
         return;
-      }else{
+      } else {
         include("registrarse.php");
       }
-      
     }
   } else {
   ?>
@@ -115,27 +102,41 @@
             <h3 class="heading-desc">
               Registrarse
             </h3>
-            <p class="heading-desc text-red"><?php if (isset($error)){ echo $error; }?></p>
-            
+            <p class="heading-desc text-red"><?php if (isset($error)) {
+                                                echo $error;
+                                              } ?></p>
+
             <div class="main">
               <label for="name">Ingresa tu nombre</label>
-              <input type="text" class="form-control" name="name" placeholder="Nombre" autofocus value="<?php echo $formdata['name']; ?>"/>
-              <p class="text-red"><?php if (isset($errors['name'])){ echo $errors['name']; }  ?></p>
+              <input type="text" class="form-control" name="name" placeholder="Nombre" autofocus value="<?php echo $formdata['name']; ?>" />
+              <p class="text-red"><?php if (isset($errors['name'])) {
+                                    echo $errors['name'];
+                                  }  ?></p>
               <label for="name">Ingresa tu apellido</label>
-              <input type="text" class="form-control" name="lastname" placeholder="Apellido" value="<?php echo $formdata['lastname']; ?>"/>
-              <p class="text-red"><?php if (isset($errors['lastname'])){ echo $errors['lastname']; }  ?></p>
+              <input type="text" class="form-control" name="lastname" placeholder="Apellido" value="<?php echo $formdata['lastname']; ?>" />
+              <p class="text-red"><?php if (isset($errors['lastname'])) {
+                                    echo $errors['lastname'];
+                                  }  ?></p>
               <label for="name">Ingresa tu documento</label>
-              <input type="text" class="form-control" name="dni" placeholder="Documento" value="<?php echo $formdata['dni']; ?>"/>
-              <p class="text-red"><?php if (isset($errors['dni'])){ echo $errors['dni']; }  ?></p>
+              <input type="text" class="form-control" name="dni" placeholder="Documento" value="<?php echo $formdata['dni']; ?>" />
+              <p class="text-red"><?php if (isset($errors['dni'])) {
+                                    echo $errors['dni'];
+                                  }  ?></p>
               <label for="name">Ingresa un telefono</label>
-              <input type="text" class="form-control" name="tel" placeholder="Telefono 3868-xxxxxxx" value="<?php echo $formdata['tel']; ?>"/>
-              <p class="text-red"><?php if (isset($errors['tel'])){ echo $errors['tel']; }  ?></p>
+              <input type="text" class="form-control" name="tel" placeholder="Telefono 3868-xxxxxxx" value="<?php echo $formdata['tel']; ?>" />
+              <p class="text-red"><?php if (isset($errors['tel'])) {
+                                    echo $errors['tel'];
+                                  }  ?></p>
               <label for="email">Ingresa tu correo electronico</label>
-              <input type="text" class="form-control" name="email" placeholder="Email" value="<?php echo $formdata['email']; ?>"/>
-              <p class="text-red"><?php if (isset($errors['email'])){ echo $errors['email']; }  ?></p>
+              <input type="text" class="form-control" name="email" placeholder="Email" value="<?php echo $formdata['email']; ?>" />
+              <p class="text-red"><?php if (isset($errors['email'])) {
+                                    echo $errors['email'];
+                                  }  ?></p>
               <label for="password">Ingresa tu contraseña</label>
-              <input type="password" class="form-control" name="password" placeholder="Password" value="<?php echo $formdata['password']; ?>"/>
-              <p class="text-red"><?php if (isset($errors['pass'])){ echo $errors['pass']; }  ?></p>
+              <input type="password" class="form-control" name="password" placeholder="Password" value="<?php echo $formdata['password']; ?>" />
+              <p class="text-red"><?php if (isset($errors['pass'])) {
+                                    echo $errors['pass'];
+                                  }  ?></p>
 
               <span class="clearfix"></span>
             </div>
