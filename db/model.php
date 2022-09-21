@@ -199,7 +199,7 @@ class Comercios extends DBModelo{
         return array($res[0], "Consulta realizada con exito.");
     }
     public function obtenerTodo(){
-        $query = ("SELECT sc.*, CONCAT(u.nombre, ' ', u.apellido) as propietario FROM " . $this->table . " sc LEFT JOIN usuarios u USING(id_usuario)");
+        $query = ("SELECT sc.*, ci.url, CONCAT(u.nombre, ' ', u.apellido) as propietario FROM " . $this->table . " sc LEFT JOIN usuarios u USING(id_usuario) LEFT JOIN (SELECT * FROM comercios_imagenes GROUP BY id_comercio) ci USING(id_comercio);");
         $res = $this->db->query($query);
         return ($res[1]);
     }
