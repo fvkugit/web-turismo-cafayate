@@ -1,3 +1,4 @@
+<?php include_once("./utils/nodirecto.php"); ?>
 <footer>
         <div class="container">
             <div class="row">

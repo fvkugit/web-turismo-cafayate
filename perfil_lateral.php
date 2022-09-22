@@ -15,7 +15,7 @@ $activePage = basename($_SERVER['PHP_SELF'], ".php");
         </li>
         <?php if ($usuario["rol"] === "Admin") { ?>
             <li class="category">
-                <i class="	glyphicon glyphicon-wrench"></i>
+                <i class="glyphicon glyphicon-wrench"></i>
                 Admin
             </li>
             <li class="<?= ($activePage == 'panel_inicio') ? 'active':''; ?>">
@@ -27,6 +27,11 @@ $activePage = basename($_SERVER['PHP_SELF'], ".php");
                 <a href="./panel_turismo.php">
                     <i class="glyphicon glyphicon-camera"></i>
                     Turismo </a>
+            </li>
+            <li class="<?= ($activePage == 'panel_novedades') ? 'active':''; ?>">
+                <a href="./panel_novedades.php">
+                    <i class="glyphicon glyphicon-bullhorn"></i>
+                    Novedades </a>
             </li>
             <li class="<?= ($activePage == 'panel_usuarios') ? 'active':''; ?>">
                 <a href="./panel_usuarios.php">

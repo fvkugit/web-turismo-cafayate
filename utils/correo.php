@@ -1,4 +1,5 @@
 <?php 
+include_once("./utils/nodirecto.php");
 require_once("./utils/sendgrid/sendgrid-php.php");
 
 

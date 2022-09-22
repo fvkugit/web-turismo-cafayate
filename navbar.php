@@ -1,5 +1,5 @@
 <?php 
-
+include_once("./utils/nodirecto.php");
 include_once("./utils/sessions.php");
 include_once("./db/main.php");
 if(isset($_SESSION['id'])){

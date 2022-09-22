@@ -1,7 +1,5 @@
 <?php
-
-include "config.php"; #Include PHP DB
-// $message = "Su registro fue completado con exito"
+include_once("./utils/nodirecto.php");
 $enlaceBoton = @$redirect ?: "./index.php" 
 
 ?>

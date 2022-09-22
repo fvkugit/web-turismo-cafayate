@@ -1,5 +1,6 @@
 
 <?php
+include_once("./utils/nodirecto.php");
 function validarEmail($email){
     $error = "";
     if ($email == ""){

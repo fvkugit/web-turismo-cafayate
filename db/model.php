@@ -1,5 +1,5 @@
 <?php
-
+include_once("./utils/nodirecto.php");
 class DBConexion{
     protected $username = 'root';
     protected $password = '123';

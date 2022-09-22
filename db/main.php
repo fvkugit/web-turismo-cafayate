@@ -1,5 +1,5 @@
 <?php
-
+include_once("./utils/nodirecto.php");
 require_once("./db/model.php");
 $db_base = new DBConexion();
 $usuarios = new Usuarios("usuarios", $db_base);
