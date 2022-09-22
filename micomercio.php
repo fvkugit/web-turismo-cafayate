@@ -5,8 +5,13 @@ include_once("./db/main.php");
 include_once("./validaciones.php");
 $usuario = $usuarios->obtenerUno(["id_usuario" => "'{$_SESSION['id']}'"])[1];
 $comercio = $comercios->obtenerUno(["id_usuario" => "'{$_SESSION['id']}'"])[1];
-$id_com = $comercio["id_comercio"];
-$imagenes = $comercios_imagenes->obtener(["id_comercio"=>"'$id_com'"]);
+$desc = '<ul> <li> <p><strong>Historia</strong></p> <p>Donec dapibus semper sem, ac ultrices sem sagittis ut. Donec sit amet erat elit, sed pellentesque odio. In enim ligula, euismod a adipiscing in, laoreet quis turpis. Ut accumsan dignissim rutrum.</p> </li> <li> <p><strong>Certificados</strong></p> <p>Donec dapibus semper sem, ac ultrices sem sagittis ut. Donec sit amet erat elit, sed pellentesque odio. In enim ligula, euismod a adipiscing in, laoreet quis turpis. Ut accumsan dignissim rutrum.</p> </li> <li> <p><strong>Telefono</strong></p> <p>+54 341 000 0000</p> </li> <li> <p><strong>Direccion</strong></p> <p>Av. Eva peron 557</p> </li> <li> <p><strong>Redes Sociales</strong></p> <p>www.comercio1.com<br /> www.instagram.com/comercio1<br /> www.facebook.com/comercio1</p> </li> </ul> ';
+$hor = '<table border="0" cellpadding="0" cellspacing="0" style="width:100%"> <thead> <tr> <th>Horarios Semanales</th> <th>Lunes a Viernes</th> <th>Sabado, Domingo y Feriados</th> </tr> </thead> <tbody> <tr> <td>&nbsp;</td> <td>08:00 hs a 17:00 hs</td> <td>08:00 hs a 17:00 hs</td> </tr> <tr> <td>&nbsp;</td> <td>08:00 hs a 17:00 hs</td> <td>08:00 hs a 17:00 hs</td> </tr> <tr> <td>&nbsp;</td> <td>08:00 hs a 17:00 hs</td> <td>08:00 hs a 17:00 hs</td> </tr> </tbody> </table> ';
+if (isset($comercio["id_comercio"])){
+    $id_com = $comercio["id_comercio"];
+    $imagenes = $comercios_imagenes->obtener(["id_comercio"=>"'$id_com'"]);
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -264,7 +269,7 @@ $imagenes = $comercios_imagenes->obtener(["id_comercio"=>"'$id_com'"]);
                                                     <label for="descripcion">Descripción</label>
                                                     <textarea class="ckeditor" name="descripcion"><?php if (isset($comercio["id_comercio"])) {
                                                                                                         echo ($comercio['descripcion']);
-                                                                                                    }; ?></textarea>
+                                                                                                    }else{echo($desc);} ?></textarea>
                                                     <p class="text-red"><?php if (isset($errors['descripcion'])) {
                                                                             echo $errors['descripcion'];
                                                                         }  ?></p>
@@ -272,7 +277,7 @@ $imagenes = $comercios_imagenes->obtener(["id_comercio"=>"'$id_com'"]);
                                                     <label for="horarios">Horarios</label>
                                                     <textarea class="ckeditor" name="horarios"><?php if (isset($comercio["id_comercio"])) {
                                                                                                     echo ($comercio['horarios']);
-                                                                                                }; ?></textarea>
+                                                                                                }else{echo($hor);} ?></textarea>
                                                     <p class="text-red"><?php if (isset($errors['horarios'])) {
                                                                             echo $errors['horarios'];
                                                                         }  ?></p>
@@ -292,7 +297,7 @@ $imagenes = $comercios_imagenes->obtener(["id_comercio"=>"'$id_com'"]);
                                                 </div>
 
                                             </form>
-                                            <div class="mg-btm mx-auto mt-5">
+                                            <div class="mg-btm mx-auto mt-5 main">
                                                 <label for="cargarimagen">Cargar imagen</label>
 
                                                 <div class="uploader">
@@ -306,6 +311,7 @@ $imagenes = $comercios_imagenes->obtener(["id_comercio"=>"'$id_com'"]);
                                                 <label for="">Imagenes del comercio</label>
                                 
                                                 <div class="row">
+                                                    <?php if(isset($imagenes)){ ?>
                                                     <?php while ($img = mysqli_fetch_assoc($imagenes)) { ?>
                                                     <div class="col-sm-4 col-xs-6">
                                                         <div class="form-group">
@@ -316,7 +322,8 @@ $imagenes = $comercios_imagenes->obtener(["id_comercio"=>"'$id_com'"]);
                                                             
                                                         </div>
                                                     </div>
-                                                    <?php } ?>
+                                                    <?php } } ?>
+
                                                 </div>
                                             </div>
                                         </div>
