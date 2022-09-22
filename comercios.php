@@ -36,12 +36,12 @@ $listComercios = $comercios->obtenerTodo();
             <div class="container">
                 <div class="row">
                     <?php while ($comercio = mysqli_fetch_assoc($listComercios)) { ?>
-
+                        <?php $c_portada = @$comercio["url"] ?: "./image/placeholder.png"; ?>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="featured-item">
                                 <div class="thumb">
                                     <div class="thumb-img">
-                                        <img class="imagen-grilla mb-4" src=<?php echo($comercio["url"]); ?> alt="">
+                                        <img class="imagen-grilla mb-4" src=<?php echo($c_portada); ?> alt="">
                                     </div>
 
 
