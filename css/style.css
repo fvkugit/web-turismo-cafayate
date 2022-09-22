@@ -1602,3 +1602,6 @@ main > section:nth-child(even) {
   margin-left: 10px;
 }
 
+.img-novedad{
+  border-radius: 10px;
+}
