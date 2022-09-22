@@ -35,14 +35,13 @@ $info = mysqli_fetch_assoc($pdata[1]);
         <section class="our-services">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-7">
-                        <div class="left-content">
+                    <div class="col-md-12">
+                    <div class="left-content">
+                            <div><img src="img/about-1-720x4802.jpg" class="image-turismo" alt=""></div>
                             <p><?php echo $info["bienvenida_turismo"] ?></p>
                         </div>
                     </div>
-                    <div class="col-md-5">
-                        <img src="img/about-1-720x4802.jpg" class="img-fluid" alt="">
-                    </div>
+
                 </div>
             </div>
         </section>
@@ -52,15 +51,15 @@ $info = mysqli_fetch_assoc($pdata[1]);
             <div class="video-content">
                 <div class="inner">
                     <div class="section-heading">
-                        <span>Lorem ipsum dolor.</span>
-                        <h2>Vivamus nec vehicula felis</h2>
+                        <!-- <span>Lorem ipsum dolor.</span> -->
+                        <!-- <h2>Vivamus nec vehicula felis</h2> -->
                     </div>
                     <!-- Modal button -->
 
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-10 col-lg-offset-1">
-                                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi blanditiis, esse deserunt assumenda! Tempora nulla natus illum soluta quasi, nisi, in quaerat cumque corrupti ipsum impedit necessitatibus expedita minus harum, fuga id aperiam autem architecto odio. Perferendis eius possimus ex itaque tenetur saepe id quis dicta voluptas, corrupti sapiente hic!</p>
+                                <!-- <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi blanditiis, esse deserunt assumenda! Tempora nulla natus illum soluta quasi, nisi, in quaerat cumque corrupti ipsum impedit necessitatibus expedita minus harum, fuga id aperiam autem architecto odio. Perferendis eius possimus ex itaque tenetur saepe id quis dicta voluptas, corrupti sapiente hic!</p> -->
                             </div>
                         </div>
                     </div>
