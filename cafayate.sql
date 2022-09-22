@@ -192,3 +192,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Populate tables
+-- -----------------------------------------------------
+INSERT INTO novedades_categorias VALUES (1, "Novedades"), (2, "Eventos"), (3, "Convocatoria");
+INSERT INTO comercio_categoria VALUES (1, "Indumentaria"), (2, "Calzados"), (3, "Comida"), (4, "Bazar"), (5, "Otros");
