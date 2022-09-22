@@ -172,12 +172,6 @@ section {
   transition: all 0.5s;
 }
 
-#primary-nav .active > a,
-#primary-nav li > a:hover,
-#primary-nav li.selected > a {
-  color: #f1a74e;
-}
-
 #primary-nav .active span{
   color: #fff;
   background-color: #f1a74e;
@@ -185,8 +179,9 @@ section {
   border-radius: 20px;
 }
 
-#primary-nav .dropdown-menu .dropdown .active a{
-  color: #fff;
+.dropdown-menu .active a{
+  background-image: -webkit-linear-gradient(top,#f1a74e 0,#7c4a0e 100%);
+  color: #000;
   background: #f1a74e !important;
 }
 
@@ -785,7 +780,7 @@ section.our-services .service-item h4 {
 }
 
 section#video-container {
-  background-image: url(../img/contact-image-1-1920x700.jpg);
+  background-image: url(../img/quehacer.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -1597,4 +1592,13 @@ main > section:nth-child(even) {
   object-fit: cover;
 }
 
+.foot-turismo{
+  width: 50%;
+}
+
+.image-turismo{
+  float: right;
+  margin-top: 50px;
+  margin-left: 10px;
+}
 
