@@ -2,6 +2,11 @@
 
 include_once("./utils/sessions.php");
 include_once("./db/main.php");
+if (!isset($_GET["id"])){
+    $message = "El comercio no existe.";
+    $redirect = "./comercios.php";
+    require("result.php");
+}
 $ver_id = $_GET["id"];
 $comercioRaw = $comercios->obtenerUno(["id_comercio" => $ver_id]);
 $comercioData = $comercioRaw[1];
