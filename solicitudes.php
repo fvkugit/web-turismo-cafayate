@@ -27,7 +27,7 @@ $listaSolis = $solicitudes->obtenerTodo();
             $uData = $usuarios->obtenerUno(["id_usuario" => "'$uId'"])[1];
             $correo = $uData["correo"];
             $nombre = $uData["nombre"];
-            $usuarios->actualizar(["id_rol" => "'3'"], ["id_usuario" => "'$uId'"]);
+            $usuarios->actualizar(["id_rol" => "'2'"], ["id_usuario" => "'$uId'"]);
             $solicitudes->eliminar(["id_solicitud" => "'$sId'"]);
             $correos->aprobarSolicitud($correo, $nombre);
             $message = "La solicitud ha sido aprobada correctamente.";
