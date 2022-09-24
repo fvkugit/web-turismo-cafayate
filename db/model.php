@@ -163,6 +163,24 @@ class Novedades extends DBModelo{
         $res = $this->db->query($query);
         return ($res[1]);
     }
+    protected function formatWhere($data){
+        $i = 1;
+        $where = '';
+        foreach ($data as $key => $value) {
+            $where .= ($key . " LIKE CONCAT ('%'," . $value . ", '%')");
+            if($i < count($data)){
+                $where .= " AND ";
+            }
+            $i++;
+        }
+        return $where;
+    }
+    public function obtener($valorBusqueda){
+        $where = $this->formatWhere($valorBusqueda);
+        $query = ("SELECT * FROM " . $this->table . " WHERE " . $where);
+        $res = $this->db->query($query);
+        return ($res[1]);
+    }
 }
 
 class Solicitudes extends DBModelo{
