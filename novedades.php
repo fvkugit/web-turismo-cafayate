@@ -1,3 +1,27 @@
+<?php
+
+include_once("./utils/sessions.php");
+include_once("./db/main.php");
+
+
+
+function formatContenido($text)
+{
+    return ((strlen($text) < 125) ? $text : substr($text, 0, 125) . " [...]");
+}
+
+if (isset($_GET["buscar"])) {
+    $buscado = $_GET["buscar"];
+    $listNovedades = $novedades->obtener(["titulo" => "'$buscado'"]);
+} else {
+    $listNovedades = $novedades->obtenerTodo();
+}
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html>
 
@@ -29,167 +53,54 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9 col-md-8 col-xs-12">
-                        <div class="row">
-                            <div class="col-sm-6 col-xs-12">
-                                <div class="featured-item">
-                                    <div class="thumb">
-                                        <div class="thumb-img">
-                                            <img src="img/blog-1-720x480.jpg" alt="">
+                        <?php if(isset($buscado)){ ?>
+                            <h4 class="mb-5">Resultado de busqueda: <?php echo($buscado); ?></h4>
+                        <?php } ?>
+                        <div class="row lista-grilla">
+
+                            <?php while ($novedad = mysqli_fetch_assoc($listNovedades)) { ?>
+                                <div class="col-sm-6 col-xs-12">
+                                    <div class="featured-item">
+                                        <div class="thumb">
+                                            <div class="thumb-img">
+                                                <img src=<?php echo (str_replace(' ', '%20', $novedad["imagen"])); ?> alt="">
+                                            </div>
+
+                                            <div class="overlay-content">
+                                                <strong title="Publicado el"><i class="fa fa-calendar"></i> <?php echo ($novedad["fecha"]); ?></strong> &nbsp;&nbsp;&nbsp;&nbsp;
+                                            </div>
                                         </div>
 
-                                        <div class="overlay-content">
-                                            <strong title="Posted on"><i class="fa fa-calendar"></i> 12/06/2020 10:30</strong> &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <strong title="Views"><i class="fa fa-map-marker"></i> 115</strong>
-                                        </div>
-                                    </div>
+                                        <div class="down-content">
+                                            <h4><?php echo ($novedad["titulo"]); ?></h4>
 
-                                    <div class="down-content">
-                                        <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit hic</h4>
+                                            <div class="conte">
+                                                <?php echo (formatContenido($novedad["contenido"])); ?>
 
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim consectetur assumenda nam facere voluptatibus totam veritatis. </p>
-
-                                        <div class="text-button">
-                                            <a href="novevades-detalles.html">Read More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6 col-xs-12">
-                                <div class="featured-item">
-                                    <div class="thumb">
-                                        <div class="thumb-img">
-                                            <img src="img/blog-2-720x480.jpg" alt="">
-                                        </div>
-
-                                        <div class="overlay-content">
-
-                                            <strong title="Posted on"><i class="fa fa-calendar"></i> 12/06/2020 10:30</strong> &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <strong title="Views"><i class="fa fa-map-marker"></i> 115</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="down-content">
-                                        <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit hic</h4>
-
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim consectetur assumenda nam facere voluptatibus totam veritatis. </p>
-
-                                        <div class="text-button">
-                                            <a href="novevades-detalles.html">Read More</a>
+                                            </div>
+                                            <div class="text-button">
+                                                <a href="./vernovedad.php?id=<?php echo ($novedad["id_novedad"]); ?>">LEER MÁS</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            <?php } ?>
 
-                            <div class="col-sm-6 col-xs-12">
-                                <div class="featured-item">
-                                    <div class="thumb">
-                                        <div class="thumb-img">
-                                            <img src="img/blog-3-720x480.jpg" alt="">
-                                        </div>
 
-                                        <div class="overlay-content">
-
-                                            <strong title="Posted on"><i class="fa fa-calendar"></i> 12/06/2020 10:30</strong> &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <strong title="Views"><i class="fa fa-map-marker"></i> 115</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="down-content">
-                                        <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit hic</h4>
-
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim consectetur assumenda nam facere voluptatibus totam veritatis. </p>
-
-                                        <div class="text-button">
-                                            <a href="novevades-detalles.html">Read More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6 col-xs-12">
-                                <div class="featured-item">
-                                    <div class="thumb">
-                                        <div class="thumb-img">
-                                            <img src="img/blog-4-720x480.jpg" alt="">
-                                        </div>
-
-                                        <div class="overlay-content">
-
-                                            <strong title="Posted on"><i class="fa fa-calendar"></i> 12/06/2020 10:30</strong> &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <strong title="Views"><i class="fa fa-map-marker"></i> 115</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="down-content">
-                                        <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit hic</h4>
-
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim consectetur assumenda nam facere voluptatibus totam veritatis. </p>
-
-                                        <div class="text-button">
-                                            <a href="novevades-detalles.html">Read More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6 col-xs-12">
-                                <div class="featured-item">
-                                    <div class="thumb">
-                                        <div class="thumb-img">
-                                            <img src="img/blog-5-720x480.jpg" alt="">
-                                        </div>
-
-                                        <div class="overlay-content">
-
-                                            <strong title="Posted on"><i class="fa fa-calendar"></i> 12/06/2020 10:30</strong> &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <strong title="Views"><i class="fa fa-map-marker"></i> 115</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="down-content">
-                                        <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit hic</h4>
-
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim consectetur assumenda nam facere voluptatibus totam veritatis. </p>
-
-                                        <div class="text-button">
-                                            <a href="novevades-detalles.html">Read More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6 col-xs-12">
-                                <div class="featured-item">
-                                    <div class="thumb">
-                                        <div class="thumb-img">
-                                            <img src="img/blog-6-720x480.jpg" alt="">
-                                        </div>
-
-                                        <div class="overlay-content">
-
-                                            <strong title="Posted on"><i class="fa fa-calendar"></i> 12/06/2020 10:30</strong> &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <strong title="Views"><i class="fa fa-map-marker"></i> 115</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="down-content">
-                                        <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit hic</h4>
-
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim consectetur assumenda nam facere voluptatibus totam veritatis. </p>
-
-                                        <div class="text-button">
-                                            <a href="novevades-detalles.html">Read More</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
                     <div class="col-lg-3 col-md-4 col-xs-12">
                         <div class="form-group">
                             <h4>Busqueda de Novedades</h4>
+                            <form method="GET" name="buscar">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="buscar" style="height: 34px;" placeholder="Ingresa tu busqueda">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                                    </span>
+                                </div>
+                            </form>
                         </div>
                         <br>
 
