@@ -50,7 +50,7 @@ if (!isset($novedadData["id_novedad"])) {
         <section class="featured-places">
             <div class="container">
                 <div class="form-group">
-                    <img src=<?php echo($novedadData["imagen"]); ?> class="img-responsive mx-auto img-novedad" alt="">
+                    <img src=<?php echo (str_replace(' ', '%20', $novedadData["imagen"])); ?> class="img-responsive mx-auto img-novedad" alt="">
                 </div>
                 
                 
