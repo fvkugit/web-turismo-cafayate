@@ -332,12 +332,21 @@ section.banner {
   position: relative;
 }
 
-.thumb-img { 
-  position: relative; 
+.thumb{
+  height: 300px;
+}
+
+.thumb-img {
+  height: 100%;
+  object-fit: cover;
+  position: relative;
 }
 
 .thumb-img img { 
+  height: 100%;
+  object-fit: cover;
   position: relative; z-index: 2; 
+
 }
 
 .input-group-addon:last-child { 
@@ -553,7 +562,10 @@ section.banner {
   z-index: 9;
 }
 
-.featured-item { margin-bottom: 30px; }
+.featured-item { 
+  margin-bottom: 30px;
+  /* height: 700px; */
+}
 
 .popular-places .popular-item .thumb .plus-button i {
   width: 30px;
@@ -655,8 +667,12 @@ section.banner {
   font-size: 22px;  
 }
 
-.featured-places .featured-item .down-content p {
+.featured-places .featured-item .down-content .conte {
   margin-bottom: 20px;
+  font-size: 14px;
+  color: #7a7a7a;
+  line-height: 24px;
+  left: 0.25px;
 }
 
 .featured-places .featured-item .down-content .col-md-6 {
@@ -1604,4 +1620,12 @@ main > section:nth-child(even) {
 
 .img-novedad{
   border-radius: 10px;
+}
+
+.lista-grilla{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+  flex-wrap: wrap;
 }
