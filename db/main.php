@@ -8,6 +8,7 @@ $novedades = new Novedades("novedades", $db_base);
 $dpublica = new DPublica("datos_publicos", $db_base);
 $comercios = new Comercios("comercios", $db_base);
 $comercios_imagenes = new Comercios_Imagenes("comercios_imagenes", $db_base);
+$novedades_categorias = new DBModelo("novedades_categorias", $db_base);
 
 
 ?>
