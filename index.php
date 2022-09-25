@@ -68,7 +68,7 @@ $info = mysqli_fetch_assoc($pdata[1]);
                                 <p><?php echo $noticia["contenido"] ?></p>
 
                                 <div class="text-button">
-                                    <a href="novevades-detalles.html">Leer Mas</a>
+                                    <a href="./vernovedad.php?id=<?php echo ($noticia["id_novedad"]); ?>">Leer más</a>
                                 </div>
                             </div>
                         </div>
