@@ -6,8 +6,6 @@ turísticos y comerciales en la localidad Cafayate ubicada en la provincia de Sa
 desarrollada por un grupo de dos estudiantes del instituto terciario Urquiza como proyecto
 de la materia curricular Práctica Profesionalizantes.
 
-[Documentacion](https://drive.google.com/file/d/1t0JZGGPou5ImV0YqTQ9yF_dkTpQm9AEs/view?usp=sharing)
-
 ## Cuentas de pruebas
 | Email | Password | Role |
 | ------------- | ------------- | ------------- |
