@@ -11,4 +11,5 @@ de la materia curricular Práctica Profesionalizantes.
 | Email | Password | Role |
 | ------------- | ------------- | ------------- |
 | usuario@correo.com  | usuario1 | Usuario
+| comerciante@correo.com  | comerciante1 | Comerciante
 | admin@correo.com  | admin1 | Admin 
