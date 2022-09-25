@@ -2,22 +2,27 @@
 
 include_once("./utils/sessions.php");
 include_once("./db/main.php");
-
-
+$cats = $novedades_categorias->obtenerTodo();
+$resn = 0;
 
 function formatContenido($text)
 {
     return ((strlen($text) < 125) ? $text : substr($text, 0, 125) . " [...]");
 }
 
+if (isset($_GET["fcat"])){
+    $fcat = $_GET["fcat"];
+}
+
 if (isset($_GET["buscar"])) {
     $buscado = $_GET["buscar"];
     $listNovedades = $novedades->obtener(["titulo" => "'$buscado'"]);
+    if ($buscado == "") unset($buscado);
 } else {
     $listNovedades = $novedades->obtenerTodo();
 }
 
-
+$novUltimas = $novedades->obtenerTodo();
 
 ?>
 
@@ -53,12 +58,13 @@ if (isset($_GET["buscar"])) {
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9 col-md-8 col-xs-12">
-                        <?php if(isset($buscado)){ ?>
-                            <h4 class="mb-5">Resultado de busqueda: <?php echo($buscado); ?></h4>
+                        <?php if (isset($buscado)) { ?>
+                            <h4 class="mb-5">Resultado de busqueda: <?php echo ($buscado); ?></h4>
                         <?php } ?>
+
                         <div class="row lista-grilla">
 
-                            <?php while ($novedad = mysqli_fetch_assoc($listNovedades)) { ?>
+                            <?php while ($novedad = mysqli_fetch_assoc($listNovedades)) { if(isset($fcat)){if ($novedad["id_categoria"] != $fcat)continue;} $resn = 1; ?>
                                 <div class="col-sm-6 col-xs-12">
                                     <div class="featured-item">
                                         <div class="thumb">
@@ -67,7 +73,7 @@ if (isset($_GET["buscar"])) {
                                             </div>
 
                                             <div class="overlay-content">
-                                                <strong title="Publicado el"><i class="fa fa-calendar"></i> <?php echo ($novedad["fecha"]); ?></strong> &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <strong title="Publicado el"><i class="fa fa-calendar"></i> <?php echo ($novedad["fecha"]); ?></strong> 
                                             </div>
                                         </div>
 
@@ -88,6 +94,9 @@ if (isset($_GET["buscar"])) {
 
 
                         </div>
+                        <?php if (mysqli_num_rows($listNovedades) === 0 || $resn == 0) { ?>
+                            <h4 class="mb-5">No hay resultados para su busqueda</h4>
+                        <?php } ?>
                     </div>
 
                     <div class="col-lg-3 col-md-4 col-xs-12">
@@ -95,23 +104,29 @@ if (isset($_GET["buscar"])) {
                             <h4>Busqueda de Novedades</h4>
                             <form method="GET" name="buscar">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="buscar" style="height: 34px;" placeholder="Ingresa tu busqueda">
+                                    <input type="text" class="form-control" name="buscar" style="height: 34px;" placeholder="Ingresa tu busqueda" value=<?php if(isset($buscado)){echo($buscado);} ?>>
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                                     </span>
+                                </div>
+                                <div class="form-group mt-2">
+                                        <?php while ($cat = mysqli_fetch_assoc($cats)) { ?>
+                                            <button class="btn btn-warning btn-sm" name="fcat" value=<?php echo ($cat["id_categoria"]); ?> type="submit"><?php echo ($cat["descripcion"]); ?></button>
+                                        <?php } ?>
                                 </div>
                             </form>
                         </div>
                         <br>
 
                         <div class="form-group">
-                            <h4>Novedades mas importantes</h4>
+                            <h4>Ultimas novedades</h4>
                         </div>
+                        <?php $num_rows = 1; while ($novedad = mysqli_fetch_assoc($novUltimas)) { ?>
+                            <?php if($num_rows > 3) break; $num_rows++;?>
 
-                        <p><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos quae animi sint.</a></p>
-                        <p><a href="#">Non, magni, sequi. Explicabo illum quas debitis ut hic possimus, nesciunt mag!</a></p>
-                        <p><a href="#">Vatae expedita deleniti optio ex adipisci animi, iusto tempora. </a></p>
-                        <p><a href="#">Soluta non modi dolorem voluptates. Maiores est, molestiae dolor laborum.</a></p>
+                            <p><a href="./vernovedad.php?id=<?php echo ($novedad["id_novedad"]); ?>">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos quae animi sint.</a></p>
+                        <?php } ?>
+                        
                     </div>
                 </div>
             </div>
