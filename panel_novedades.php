@@ -17,37 +17,63 @@ $cats = $novedades_categorias->obtenerTodo();
 <body>
     <?php
     include_once("validaciones.php");
-    if (($_SERVER['REQUEST_METHOD'] === "POST") && (isset($_POST['nov-eliminar']) || isset($_POST['nov-editar']) || isset($_POST["nov-publicar"]))) {
-        if (isset($_POST['aprobar-soli'])) {
-            $data = explode("-", $_POST['aprobar-soli']);
-            $uId = $data[1];
-            $sId = $data[0];
-            $solicitudes->eliminar(["id_solicitud" => "'$sId'"]);
-            $usuarios->actualizar(["id_rol" => "'3'"], ["id_usuario" => "'$uId'"]);
-            $message = "La solicitud ha sido aprobada correctamente.";
-            $redirect = "./solicitudes.php";
-            require("result.php");
-        } elseif (isset($_POST['rechazar-soli'])) {
-            $sId = $_POST['rechazar-soli'];
-            $solicitudes->eliminar(["id_solicitud" => "'$sId'"]);
-            $redirect = "./solicitudes.php";
-            $message = "La solicitud ha sido rechazada correctamente.";
-            require("result.php");
-        } elseif (isset($_POST['nov-publicar'])){
-            $titulo = $_POST["titulo"];
-            $contenido = $_POST["contenido"];
-            $cat = $_POST["categoria"];
-            $filename = "nov-" . $titulo . "-" . $_FILES["portada"]["name"];
-            $tempname = $_FILES["portada"]["tmp_name"];
-            $folder = "./image/nov/" . $filename;
-            if (move_uploaded_file($tempname, $folder)) {
-                $nuevopost = $novedades->crear(["titulo"=>"'$titulo'", "contenido"=>"'$contenido'", "id_categoria"=>"'$cat'", "imagen"=>"'$folder'"]);
-                print_r($nuevopost);
-
-            } else {
-                $message = "Error al cargar los datos.";
+    if (($_SERVER['REQUEST_METHOD'] === "POST") && (isset($_POST['nov-eliminar']) || isset($_POST["nov-publicar"]))) {
+        if (isset($_POST['nov-eliminar'])) {
+            $ide = htmlspecialchars($_POST['nov-eliminar']);
+            $res = $novedades->eliminar(["id_novedad" => "'$ide'"]);
+            if ($res[0]) {
+                $message = "La novedad ha sido eliminada correctamente.";
                 $redirect = "./panel_novedades.php";
                 require("result.php");
+            } else {
+                $message = "Hubo un error al intentar eliminar la novedad.";
+                $redirect = "./panel_novedades.php";
+                require("result.php");
+            }
+        } elseif (isset($_POST['nov-publicar'])) {
+            $errorOnSubmit = false;
+            $titulo = htmlspecialchars($_POST["titulo"]);
+            $contenido = $_POST["contenido"];
+            $cat = htmlspecialchars($_POST["categoria"]);
+            $idEdit = @$_POST["nov-editar"];
+            $errors["titulo"] = validarCampo($titulo, "nombre-comercio");
+            $errors["contenido"] = validarCampo($contenido, "textarea");
+            // $errors["cat"] = validarCampo($apellido, "lastname");
+            if(!isset($idEdit)){
+                if ($_FILES["portada"]["size"] === 0) $errors["portada"] = "Debes cargar una imagen";
+            }
+            foreach ($errors as $e => $val) {
+                if ($val != "") {
+                    $errorOnSubmit = true;
+                    break;
+                }
+            }
+            unset($_POST['nov-publicar']);
+            $_POST["nov-crear"] = 1;
+            if (!$errorOnSubmit) {
+                $filename = "nov-" . $titulo . "-" . $_FILES["portada"]["name"];
+                $tempname = $_FILES["portada"]["tmp_name"];
+                $folder = "./image/nov/" . $filename;
+                if (isset($idEdit)) {
+                    $qData = ["titulo" => "'$titulo'", "contenido" => "'$contenido'", "id_categoria" => "'$cat'", "imagen" => "'$folder'", "id_novedad" => "'$idEdit'"];
+                } else {
+                    $qData = ["titulo" => "'$titulo'", "contenido" => "'$contenido'", "id_categoria" => "'$cat'", "imagen" => "'$folder'"];
+                }
+                if($idEdit && ($_FILES["portada"]["size"] == 0)){
+                    $imgEdit = $_POST["portada"];
+                    $qData["imagen"] = "'{$imgEdit}'";
+                    $nuevopost = $novedades->crear($qData);
+                }else{
+                    if (move_uploaded_file($tempname, $folder)) {
+                        $nuevopost = $novedades->crear($qData);
+                    } else {
+                        $message = "Error al cargar los datos.";
+                        $redirect = "./panel_novedades.php";
+                        require("result.php");
+                    }
+                }
+            } else {
+                require("panel_novedades.php");
             }
         }
     } else {
@@ -95,7 +121,7 @@ $cats = $novedades_categorias->obtenerTodo();
                         </div>
                         <div class="col-md-9">
                             <div class="profile-content">
-                                <?php if (!isset($_POST["nov-crear"])) { ?>
+                                <?php if (!isset($_POST["nov-crear"]) && !isset($_POST["nov-editar"])) { ?>
                                     <div class="row custyle">
                                         <table class="table table-striped custab">
                                             <thead>
@@ -115,8 +141,8 @@ $cats = $novedades_categorias->obtenerTodo();
                                                     <td><?php echo ($soli["fecha"]); ?></td>
                                                     <td class="text-center">
                                                         <form method="post" name="nov-post">
-                                                            <button class='btn btn-info btn-s' type="submit" name="nov-editar" value="<?php echo ($soli["id_novedad"] . "-" . $soli["id_usuario"]); ?>"><span class="glyphicon glyphicon-edit"></span></button>
-                                                            <button class='btn btn-danger btn-s' type="submit" name="nov-eliminar" value="<?php echo ($soli["id_novedad"] . "-" . $soli["id_usuario"]); ?>"><span class="glyphicon glyphicon-trash"></span></button>
+                                                            <button class='btn btn-info btn-s' type="submit" name="nov-editar" value="<?php echo ($soli["id_novedad"]); ?>"><span class="glyphicon glyphicon-edit"></span></button>
+                                                            <button class='btn btn-danger btn-s' type="submit" name="nov-eliminar" value="<?php echo ($soli["id_novedad"]); ?>"><span class="glyphicon glyphicon-trash"></span></button>
                                                             <a href="./vernovedad.php?id=<?php echo ($soli["id_novedad"]); ?>"><button class='btn btn-success btn-s' type="button"><span class="glyphicon glyphicon-eye-open"></button></a>
                                                         </form>
                                                     </td>
@@ -129,7 +155,12 @@ $cats = $novedades_categorias->obtenerTodo();
                                     <form method="post" name="nov-post">
                                         <button type="submit" name="nov-crear" value="1" class="btn btn-success btn-sm btn-block"><span class="glyphicon glyphicon-plus"></span> Agregar nueva noticia</button>
                                     </form>
-                                <?php } else { ?>
+                                <?php } else {
+                                    if (isset($_POST["nov-editar"])) {
+                                        $eId = $_POST["nov-editar"];
+                                        $dataEditar = $novedades->obtenerUno(["id_novedad" => "'$eId'"])[1];
+                                    }
+                                ?>
                                     <div class="mg-btm mx-auto">
                                         <form method="POST" name="nov-publicar" enctype="multipart/form-data">
                                             <h3 class="heading-desc">
@@ -144,7 +175,9 @@ $cats = $novedades_categorias->obtenerTodo();
 
                                             <div class="main">
                                                 <label for="titulo">Titulo</label>
-                                                <input type="text" class="form-control" name="titulo" autofocus />
+                                                <input type="text" class="form-control" name="titulo" autofocus value="<?php if (isset($_POST["nov-editar"])) {
+                                                                                                                            echo ($dataEditar["titulo"]);
+                                                                                                                        } ?>" />
                                                 <p class="text-red"><?php if (isset($errors['titulo'])) {
                                                                         echo $errors['titulo'];
                                                                     }  ?></p>
@@ -153,26 +186,39 @@ $cats = $novedades_categorias->obtenerTodo();
                                                     <label for="categoria">Categoria</label>
                                                     <select class="form-control" id="categoria" name="categoria">
                                                         <?php while ($cat = mysqli_fetch_assoc($cats)) { ?>
-                                                            <option value=<?php echo ($cat["id_categoria"]); ?>><?php echo ($cat["descripcion"]); ?></option>
+
+                                                            <option <?php if (isset($_POST["nov-editar"])) {
+                                                                        echo (($cat["id_categoria"] == $dataEditar["id_categoria"]) ? "selected='true'" : '');
+                                                                    } ?> value=<?php echo ($cat["id_categoria"]); ?>><?php echo ($cat["descripcion"]); ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
 
                                                 <label for="contenido">Contenido</label>
-                                                <textarea class="ckeditor" name="contenido"></textarea>
+                                                <textarea class="ckeditor" name="contenido">
+                                                    <?php if (isset($_POST["nov-editar"])) {
+                                                        echo ($dataEditar["contenido"]);
+                                                    } ?>
+                                                </textarea>
                                                 <p class="text-red"><?php if (isset($errors['contenido'])) {
                                                                         echo $errors['contenido'];
                                                                     }  ?></p>
 
 
                                                 <label for="cargarimagen">Portada</label>
+                                                <p class="text-red"><?php if (isset($errors['portada'])) {
+                                                                        echo $errors['portada'];
+                                                                    }  ?></p>
 
                                                 <div class="uploader">
                                                     <input type="file" class="form-control" name="portada">
                                                     <p style="margin-top: -55px">Arrastra tu imagen o presiona aquí.</p>
                                                 </div>
 
-
+                                                <?php if (isset($_POST["nov-editar"])) { ?>
+                                                    <input type='hidden' name='nov-editar' value=<?php echo ($_POST["nov-editar"]); ?>>
+                                                    <input type='hidden' name='portada' value=<?php echo ($dataEditar["imagen"]); ?>>
+                                                <?php } ?>
 
                                             </div>
                                             <div class="">
