@@ -198,3 +198,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 INSERT INTO novedades_categorias VALUES (1, "Noticias"), (2, "Eventos"), (3, "Convocatorias");
 INSERT INTO comercio_categoria VALUES (1, "Indumentaria"), (2, "Calzados"), (3, "Comida"), (4, "Bazar"), (5, "Otros");
+INSERT INTO usuarios VALUES
+  (NULL, "Cuenta", "Admin", "3411111111", "admin@correo.com", "$2a$12$p88FfXAJ/ADqZSR.fHU2G.lulSLzy5fX01QslOCWqFhiv7P.637xS", "11111111", "3"), -- Password: admin1
+  (NULL, "Cuenta", "Comerciante", "3411111111", "comerciante@correo.com", "$2a$12$l07csZFb1Dt68nuSlkHr3OVJA/PDvSkysPofvLWt0H1iRBX48Lo76", "11111111", "2"), -- Password: comerciante1
+  (NULL, "Cuenta", "Usuario", "3411111111", "usuario@correo.com", "$2a$12$Bn8qzEtYs7OfEYezsISSH.5qp1DB5Re56P9FqxHtbwlkrWC2tSJVi", "11111111", "1"); -- Password: usuario1
