@@ -181,6 +181,14 @@ class Novedades extends DBModelo{
         $res = $this->db->query($query);
         return ($res[1]);
     }
+    public function crear($data){
+        $update =  $this->formatUpdate($data);
+        $insert = $this->formatInsert($data);
+        $query = ($insert . " ON DUPLICATE KEY UPDATE " . $update);
+        $res = $this->db->query($query);
+        if ($res[0] === false) { return $res; }
+        return array($res[0], "Consulta realizada con exito.");
+    }
 }
 
 class Solicitudes extends DBModelo{
