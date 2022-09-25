@@ -196,5 +196,5 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 -- Populate tables
 -- -----------------------------------------------------
-INSERT INTO novedades_categorias VALUES (1, "Novedades"), (2, "Eventos"), (3, "Convocatoria");
+INSERT INTO novedades_categorias VALUES (1, "Noticias"), (2, "Eventos"), (3, "Convocatorias");
 INSERT INTO comercio_categoria VALUES (1, "Indumentaria"), (2, "Calzados"), (3, "Comida"), (4, "Bazar"), (5, "Otros");
