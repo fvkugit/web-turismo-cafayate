@@ -1,5 +1,6 @@
 <?php
 require_once("validar_login.php");
+include_once("./utils/validar_admin.php");
 include_once("./utils/sessions.php");
 include_once("./db/main.php");
 include_once("./utils/correo.php");

@@ -1,5 +1,6 @@
 <?php
 require_once("validar_login.php");
+include_once("./utils/validar_admin.php");
 include_once("./utils/sessions.php");
 include_once("./db/main.php");
 $usuario = $usuarios->obtenerUno(["id_usuario" => "'{$_SESSION['id']}'"])[1];
