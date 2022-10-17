@@ -197,7 +197,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- Populate tables
 -- -----------------------------------------------------
 INSERT INTO novedades_categorias VALUES (1, "Noticias"), (2, "Eventos"), (3, "Convocatorias");
-INSERT INTO comercio_categoria VALUES (1, "Indumentaria"), (2, "Calzados"), (3, "Comida"), (4, "Bazar"), (5, "Otros");
+INSERT INTO comercios_categorias VALUES (1, "Indumentaria"), (2, "Calzados"), (3, "Comida"), (4, "Bazar"), (5, "Otros");
 INSERT INTO roles VALUES (1, "Usuario"), (2, "Comerciante"), (3, "Admin");
 INSERT INTO usuarios VALUES
   (NULL, "Cuenta", "Admin", "3411111111", "admin@correo.com", "$2a$12$p88FfXAJ/ADqZSR.fHU2G.lulSLzy5fX01QslOCWqFhiv7P.637xS", "11111111", "3"), -- Password: admin1
