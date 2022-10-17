@@ -4,6 +4,10 @@ include_once("./db/main.php");
 $pdata = $db_base->query("SELECT * FROM datos_publicos LIMIT 1");
 $ndata = $db_base->query("SELECT * FROM novedades LIMIT 3");
 $info = mysqli_fetch_assoc($pdata[1]);
+function formatContenido($text)
+{
+    return ((strlen($text) < 125) ? $text : substr($text, 0, 125) . " [...]");
+}
 ?>
 
 <!DOCTYPE html>
@@ -58,14 +62,14 @@ $info = mysqli_fetch_assoc($pdata[1]);
                         <div class="featured-item">
                             <div class="thumb">
                                 <div class="thumb-img">
-                                    <img src=<?php echo $noticia["imagen"]?> alt="">
+                                    <img src=<?php echo (str_replace(' ', '%20', $noticia["imagen"])); ?> alt="">
                                 </div>
                             </div>
 
                             <div class="down-content">
                                 <h4><?php echo $noticia["titulo"] ?></h4>
 
-                                <p><?php echo $noticia["contenido"] ?></p>
+                                <p><?php echo (formatContenido($noticia["contenido"])); ?></p>
 
                                 <div class="text-button">
                                     <a href="./vernovedad.php?id=<?php echo ($noticia["id_novedad"]); ?>">Leer más</a>
