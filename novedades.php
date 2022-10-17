@@ -124,7 +124,7 @@ $novUltimas = $novedades->obtenerTodo();
                         <?php $num_rows = 1; while ($novedad = mysqli_fetch_assoc($novUltimas)) { ?>
                             <?php if($num_rows > 3) break; $num_rows++;?>
 
-                            <p><a href="./vernovedad.php?id=<?php echo ($novedad["id_novedad"]); ?>">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos quae animi sint.</a></p>
+                            <p><a href="./vernovedad.php?id=<?php echo ($novedad["id_novedad"]); ?>"><?php echo ($novedad["titulo"]); ?></a></p>
                         <?php } ?>
                         
                     </div>
