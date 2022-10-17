@@ -18,34 +18,13 @@ $listaSolis = $comercios->obtenerTodo();
     <?php
     include_once("validaciones.php");
 
-    if (($_SERVER['REQUEST_METHOD'] === "POST") && (isset($_POST['rechazar-soli']) or isset($_POST['aprobar-soli']))) {
-        if (isset($_POST['aprobar-soli'])) {
-            $data = explode("-", $_POST['aprobar-soli']);
-            $uId = $data[1];
-            $sId = $data[0];
-            $uData = $usuarios->obtenerUno(["id_usuario"=>"'$uId'"])[1];
-            $correo = $uData["correo"];
-            $nombre = $uData["nombre"];
-            $usuarios->actualizar(["id_rol" => "'3'"], ["id_usuario" => "'$uId'"]);
-            $solicitudes->eliminar(["id_solicitud" => "'$sId'"]);
-            $correos->aprobarSolicitud($correo, $nombre);
-            $message = "La solicitud ha sido aprobada correctamente.";
-            $redirect = "./solicitudes.php";
-            require("result.php");
-        } elseif (isset($_POST['rechazar-soli'])) {
-            $data = explode("-", $_POST['rechazar-soli']);
-            $uId = $data[1];
-            $sId = $data[0];
-            $uData = $usuarios->obtenerUno(["id_usuario"=>"'$uId'"])[1];
-            $correo = $uData["correo"];
-            $nombre = $uData["nombre"];
-            $razon = $_POST["razon"];
-            $solicitudes->eliminar(["id_solicitud" => "'$sId'"]);
-            $correos->rechazarSolicitud($correo, $nombre, $razon);
-            $redirect = "./solicitudes.php";
-            $message = "La solicitud ha sido rechazada correctamente.";
-            require("result.php");
-        }
+    if (($_SERVER['REQUEST_METHOD'] === "POST") && (isset($_POST['comercio-eliminar']))) {
+        $comId = $_POST['comercio-eliminar'];
+        $uData = $comercios->eliminar(["id_comercio" => "'$comId'"])[1];
+        print($uData);
+        $redirect = "./panel_comercios.php";
+        $message = "El comercio ha sido eliminado de la base de datos.";
+        require("result.php");
     } else {
     ?>
         <?php include_once 'navbar.php'; ?>
@@ -111,9 +90,9 @@ $listaSolis = $comercios->obtenerTodo();
                                                 <td><?php echo ($soli["domicilio"]); ?></td>
                                                 <td><?php echo ($soli["propietario"] . " [" . $soli["id_usuario"] . "]"); ?></td>
                                                 <td class="text-center">
-                                                    <form method="post" name="aprobar-soli">
-                                                        <button class='btn btn-success btn-s' type="submit" name="aprobar-soli" value="<?php echo ($soli["id_comercio"] . "-" . $soli["id_usuario"]); ?>"><span class="glyphicon glyphicon-edit"></span></button>
-                                                        <button class='btn btn-danger btn-s' type="button" data-toggle="modal" href="#mi_modal-<?php echo($soli["id_comercio"]); ?>"><span class="glyphicon glyphicon-trash"></span></button>
+                                                    <form method="post" name="panel-comercios">
+                                                        <!-- <button class='btn btn-success btn-s' type="submit" name="aprobar-soli" value="<?php echo ($soli["id_comercio"] . "-" . $soli["id_usuario"]); ?>"><span class="glyphicon glyphicon-edit"></span></button> -->
+                                                        <button class='btn btn-danger btn-s' type="submit" name="comercio-eliminar" value="<?php echo ($soli["id_comercio"]); ?>" data-toggle="modal"><span class="glyphicon glyphicon-trash"></span></button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -145,7 +124,7 @@ $listaSolis = $comercios->obtenerTodo();
 
                                     <?php if (mysqli_num_rows($listaSolis) === 0) { ?>
                                         <h3 class="text-center">
-                                            <?php echo ("No hay ninguna solicitud.");  ?>
+                                            <?php echo ("No hay ningún comercio.");  ?>
                                         </h3>
                                     <?php } ?>
                                 </div>
