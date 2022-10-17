@@ -203,3 +203,4 @@ INSERT INTO usuarios VALUES
   (NULL, "Cuenta", "Admin", "3411111111", "admin@correo.com", "$2a$12$p88FfXAJ/ADqZSR.fHU2G.lulSLzy5fX01QslOCWqFhiv7P.637xS", "11111111", "3"), -- Password: admin1
   (NULL, "Cuenta", "Comerciante", "3411111111", "comerciante@correo.com", "$2a$12$l07csZFb1Dt68nuSlkHr3OVJA/PDvSkysPofvLWt0H1iRBX48Lo76", "11111111", "2"), -- Password: comerciante1
   (NULL, "Cuenta", "Usuario", "3411111111", "usuario@correo.com", "$2a$12$Bn8qzEtYs7OfEYezsISSH.5qp1DB5Re56P9FqxHtbwlkrWC2tSJVi", "11111111", "1"); -- Password: usuario1
+INSERT INTO datos_publicos (id, bienvenida, bienvenida_turismo) VALUES(1, "Texto de bienvenida", "Texto de turismo");
