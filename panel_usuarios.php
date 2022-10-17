@@ -1,5 +1,6 @@
 <?php
 require_once("validar_login.php");
+include_once("./utils/validar_admin.php");
 include_once("./utils/sessions.php");
 include_once("./db/main.php");
 include_once("./utils/correo.php");
@@ -17,35 +18,13 @@ $listaSolis = $usuarios->obtenerTodo();
 <body>
     <?php
     include_once("validaciones.php");
-
-    if (($_SERVER['REQUEST_METHOD'] === "POST") && (isset($_POST['rechazar-soli']) or isset($_POST['aprobar-soli']))) {
-        if (isset($_POST['aprobar-soli'])) {
-            $data = explode("-", $_POST['aprobar-soli']);
-            $uId = $data[1];
-            $sId = $data[0];
-            $uData = $usuarios->obtenerUno(["id_usuario"=>"'$uId'"])[1];
-            $correo = $uData["correo"];
-            $nombre = $uData["nombre"];
-            $usuarios->actualizar(["id_rol" => "'3'"], ["id_usuario" => "'$uId'"]);
-            $solicitudes->eliminar(["id_solicitud" => "'$sId'"]);
-            $correos->aprobarSolicitud($correo, $nombre);
-            $message = "La solicitud ha sido aprobada correctamente.";
-            $redirect = "./solicitudes.php";
-            require("result.php");
-        } elseif (isset($_POST['rechazar-soli'])) {
-            $data = explode("-", $_POST['rechazar-soli']);
-            $uId = $data[1];
-            $sId = $data[0];
-            $uData = $usuarios->obtenerUno(["id_usuario"=>"'$uId'"])[1];
-            $correo = $uData["correo"];
-            $nombre = $uData["nombre"];
-            $razon = $_POST["razon"];
-            $solicitudes->eliminar(["id_solicitud" => "'$sId'"]);
-            $correos->rechazarSolicitud($correo, $nombre, $razon);
-            $redirect = "./solicitudes.php";
-            $message = "La solicitud ha sido rechazada correctamente.";
-            require("result.php");
-        }
+    if (($_SERVER['REQUEST_METHOD'] === "POST") && (isset($_POST['usuario-eliminar']))) {
+        $userId = $_POST['usuario-eliminar'];
+        $uData = $usuarios->eliminar(["id_usuario" => "'$userId'"])[1];
+        print($uData);
+        $redirect = "./panel_usuarios.php";
+        $message = "El usuario ha sido eliminado de la base de datos.";
+        require("result.php");
     } else {
     ?>
         <?php include_once 'navbar.php'; ?>
@@ -111,28 +90,28 @@ $listaSolis = $usuarios->obtenerTodo();
                                                 <td><?php echo ($soli["apellido"]); ?></td>
                                                 <td><?php echo ($soli["rol"]); ?></td>
                                                 <td class="text-center">
-                                                    <form method="post" name="aprobar-soli">
-                                                        <button class='btn btn-success btn-s' type="submit" name="aprobar-soli" value="<?php echo ($soli["id_usuario"] . "-" . $soli["id_usuario"]); ?>"><span class="glyphicon glyphicon-edit"></span></button>
-                                                        <button class='btn btn-danger btn-s' type="button" data-toggle="modal" href="#mi_modal-<?php echo($soli["id_usuario"]); ?>"><span class="glyphicon glyphicon-trash"></span></button>
+                                                    <form method="post" name="panel-usuarios">
+                                                        <!-- <button class='btn btn-success btn-s' type="submit" name="aprobar-soli" value="<?php echo ($soli["id_usuario"] . "-" . $soli["id_usuario"]); ?>"><span class="glyphicon glyphicon-edit"></span></button> -->
+                                                        <button class='btn btn-danger btn-s' type="submit" name="usuario-eliminar" value="<?php echo ($soli["id_usuario"]); ?>" data-toggle="modal"><span class="glyphicon glyphicon-trash"></span></button>
                                                     </form>
                                                 </td>
                                             </tr>
-                                            <div class="modal fade" id="mi_modal-<?php echo($soli["id_usuario"]); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+                                            <div class="modal fade" id="mi_modal-<?php echo ($soli["id_usuario"]); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal">
                                                                 <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
                                                             </button>
-                                                            <h4 class="modal-title" id="myModalLabel">Razón de rechazo [ID <?php echo($soli["id_usuario"]); ?>]</h4>
+                                                            <h4 class="modal-title" id="myModalLabel">Razón de rechazo [ID <?php echo ($soli["id_usuario"]); ?>]</h4>
                                                         </div>
                                                         <form method="post" name="rechazar-soli">
-                                                        <div class="modal-body">
-                                                            <div class="row" style="padding:15px">
-                                                                <textarea name="razon" style="width: 100%;"></textarea>
+                                                            <div class="modal-body">
+                                                                <div class="row" style="padding:15px">
+                                                                    <textarea name="razon" style="width: 100%;"></textarea>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
+                                                            <div class="modal-footer">
                                                                 <button class='btn btn-danger btn-s' type="submit" name="rechazar-soli" value="<?php echo ($soli["id_usuario"] . "-" . $soli["id_usuario"]); ?>">Rechazar</button>
                                                             </div>
                                                         </form>
