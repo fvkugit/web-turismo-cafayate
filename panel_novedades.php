@@ -64,9 +64,15 @@ $cats = $novedades_categorias->obtenerTodo();
                     $imgEdit = $_POST["portada"];
                     $qData["imagen"] = "'{$imgEdit}'";
                     $nuevopost = $novedades->crear($qData);
+                    $message = "Novedad actualizada.";
+                    $redirect = "./panel_novedades.php";
+                    require("result.php");
                 }else{
                     if (move_uploaded_file($tempname, $folder)) {
                         $nuevopost = $novedades->crear($qData);
+                        $message = "Novedad actualizada.";
+                        $redirect = "./panel_novedades.php";
+                        require("result.php");
                     } else {
                         $message = "Error al cargar los datos.";
                         $redirect = "./panel_novedades.php";
